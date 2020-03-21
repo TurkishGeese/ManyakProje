@@ -35,8 +35,6 @@ void Environment::initialize() {
     }
 
     mScreenSurface = SDL_GetWindowSurface(mWindow);
-
-    Logger::logError(std::filesystem::current_path().string().c_str());
 }
 
 void Environment::start() {
