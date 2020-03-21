@@ -56,6 +56,7 @@ void Environment::start() {
     if (!mIsWorking) return;
 
     loadTexture("../resources/Gunes.jpg");
+    SDL_Rect renderRect = {0, 0, 160, 120};
 
     bool running = true;
 
@@ -75,7 +76,7 @@ void Environment::start() {
         }
         
         SDL_RenderClear(mRenderer);
-        SDL_RenderCopy(mRenderer, mTexture, nullptr, nullptr);
+        SDL_RenderCopy(mRenderer, mTexture, nullptr, &renderRect);
         SDL_RenderPresent(mRenderer);
     }
 
