@@ -12,7 +12,7 @@ Run:
 ./scripts/setup-mac.sh
 ```
 
-Note that
+Note that it will require super user access with certain commands since it's setting up libraries on mac.
 
 ## BUILDING & RUNNING
 
