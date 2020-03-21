@@ -6,9 +6,16 @@
 #include <filesystem>
  
 Environment::~Environment() {
+    if (mTexture != nullptr)
+        SDL_DestroyTexture(mTexture);
+
+    if (mRenderer != nullptr)
+        SDL_DestroyRenderer(mRenderer);
+
     if (mWindow != nullptr)
         SDL_DestroyWindow(mWindow);
 
+    IMG_Quit();
     SDL_Quit();
 }
 
@@ -27,6 +34,14 @@ void Environment::initialize() {
         return;
     }
 
+    mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
+    if (mRenderer == nullptr) {
+        Logger::logSdlError("SDL Could not create a renderer!");
+        mIsWorking = false;
+        return;
+    }
+    SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
     int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {
         Logger::logSdlImageError("SDL_image could not be initialized!");
@@ -40,8 +55,7 @@ void Environment::initialize() {
 void Environment::start() {
     if (!mIsWorking) return;
 
-    SDL_FillRect(mScreenSurface, NULL, SDL_MapRGB(mScreenSurface->format, 0xFF, 0xFF, 0xFF));
-    loadMedia("../resources/Gunes.jpg");
+    loadTexture("../resources/Gunes.jpg");
 
     bool running = true;
 
@@ -59,25 +73,27 @@ void Environment::start() {
                 }
             }
         }
-        SDL_BlitSurface(mMedia, nullptr, mScreenSurface, nullptr);
-        SDL_UpdateWindowSurface(mWindow);
+        
+        SDL_RenderClear(mRenderer);
+        SDL_RenderCopy(mRenderer, mTexture, nullptr, nullptr);
+        SDL_RenderPresent(mRenderer);
     }
 
     SDL_Delay(2000);
 }
 
-void Environment::loadMedia(std::string path) {
-    SDL_Surface *optimizedSurface = nullptr;
+void Environment::loadTexture(std::string path) {
+    SDL_Texture *newTexture = nullptr;
     SDL_Surface *loadedSurface = IMG_Load(path.c_str());
     if (loadedSurface == nullptr) {
         Logger::logSdlImageError("Could not load image!");
         return;
     }
-    optimizedSurface = SDL_ConvertSurface(loadedSurface, mScreenSurface->format, 0);
-    if (optimizedSurface == nullptr) {
-        Logger::logSdlImageError("Could not optimized image!");
+    newTexture = SDL_CreateTextureFromSurface(mRenderer, loadedSurface);
+    if (newTexture == nullptr) {
+        Logger::logSdlImageError("Could not create texture from image!");
     } else {
-        mMedia = optimizedSurface;
+        mTexture = newTexture;
     }
     SDL_FreeSurface(loadedSurface);
 }

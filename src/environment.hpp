@@ -13,11 +13,12 @@ public:
     
     void initialize();
     void start();
-    void loadMedia(std::string path);
+    void loadTexture(std::string path);
 
 private:
     SDL_Window *mWindow = nullptr;
+    SDL_Renderer *mRenderer = nullptr;
     SDL_Surface *mScreenSurface = nullptr;
-    SDL_Surface *mMedia = nullptr;
+    SDL_Texture *mTexture = nullptr;
     bool mIsWorking = true;
 };
