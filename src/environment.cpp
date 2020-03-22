@@ -56,7 +56,7 @@ void Environment::start() {
     if (!mIsWorking) return;
 
     loadTexture("../resources/Gunes.jpg");
-    SDL_Rect renderRect = {0, 0, 160, 120};
+    SDL_Rect renderRect = {0, 0, 240, 160};
 
     bool running = true;
 
