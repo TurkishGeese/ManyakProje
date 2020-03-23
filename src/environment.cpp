@@ -1,9 +1,20 @@
-#include <SDL2_image/SDL_image.h>
+#if defined(MANYAK_MAC)
+    #include <SDL2_image/SDL_image.h>
+#elif defined(MANYAK_WIN32)
+    #include <SDL_image.h>
+#endif
 
 #include "environment.hpp"
 #include "logger.hpp"
 
 #include <filesystem>
+
+#if defined(MANYAK_MAC)
+    std::string resourceDirectory = "../resources/";
+#elif defined(MANYAK_WIN32)
+    std::string resourceDirectory = "../../../resources/";
+#endif
+
  
 Environment::~Environment() {
     if (mTexture != nullptr)
@@ -55,7 +66,7 @@ void Environment::initialize() {
 void Environment::start() {
     if (!mIsWorking) return;
 
-    loadTexture("../resources/Gunes.jpg");
+    loadTexture(resourceDirectory + "Gunes.jpg");
     SDL_Rect renderRect = {0, 0, 320, 240};
 
     bool running = true;
