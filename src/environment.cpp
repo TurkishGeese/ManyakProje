@@ -75,7 +75,7 @@ bool Environment::start() {
     if (!mGameState.initialized) return false;
 
     Logger::logError("Test5");
-    loadTexture(resourceDirectory + "Gunes.jpg");
+    loadTexture(resourceDirectory + "berdem.jpg");
     SDL_Rect renderRect = {0, 0, 320, 240};
 
     bool running = true;

@@ -20,7 +20,7 @@ void unloadGameLibrary(bool reload = false) {
             std::filesystem::copy_file(MANYAK_GAME, "./temp_manyakGame", std::filesystem::copy_options::overwrite_existing);
         }
         catch (std::filesystem::filesystem_error & e) {
-            Logger::logError("Filesystem error: " /*+ ((std::error_code)e.code).message()*/);
+            Logger::logError("Filesystem error: " + std::string(e.what()));
         }
         gameDllHandle = SDL_LoadObject("./temp_manyakGame");
         if (gameDllHandle == nullptr) {
