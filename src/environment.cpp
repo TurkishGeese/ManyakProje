@@ -20,6 +20,10 @@
     std::string resourceDirectory = "../resources/";
 #endif
 
+#ifndef MANYAK_GAME
+#define MANYAK_GAME 
+    // TODO Get rid of this ifndef when we fix TODO #6
+#endif
  
 Environment::~Environment() {
     if (mTexture != nullptr)
