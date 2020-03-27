@@ -1,7 +1,12 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #if defined(MANYAK_MAC)
     #include <SDL2_image/SDL_image.h>
+    #include <unistd.h>
 #elif defined(MANYAK_WIN32)
     #include <SDL_image.h>
+    #define stat _stat
 #endif
 
 #include "environment.hpp"
@@ -31,9 +36,10 @@ Environment::~Environment() {
 }
 
 void Environment::initialize() {
+    if (mIsWorking) return;
+
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         Logger::logSdlError("SDL Could not be initialized!");
-        mIsWorking = false;
         return;
     }
 
@@ -41,14 +47,12 @@ void Environment::initialize() {
 
     if (mWindow == nullptr) {
         Logger::logSdlError("SDL Could not create a window!");
-        mIsWorking = false;
         return;
     }
 
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
     if (mRenderer == nullptr) {
         Logger::logSdlError("SDL Could not create a renderer!");
-        mIsWorking = false;
         return;
     }
     SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -56,22 +60,25 @@ void Environment::initialize() {
     int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {
         Logger::logSdlImageError("SDL_image could not be initialized!");
-        mIsWorking = false;
         return;
     }
 
+    mIsWorking = true;
     mScreenSurface = SDL_GetWindowSurface(mWindow);
 }
 
-void Environment::start() {
-    if (!mIsWorking) return;
+bool Environment::start() {
+    if (!mIsWorking) return false;
 
+    Logger::logError("Test3");
     loadTexture(resourceDirectory + "Gunes.jpg");
     SDL_Rect renderRect = {0, 0, 320, 240};
 
     bool running = true;
 
     SDL_Event e;
+
+    long long lastModified = 0;
 
     while(running) {
         while(SDL_PollEvent(&e) != 0) {
@@ -89,9 +96,18 @@ void Environment::start() {
         SDL_RenderClear(mRenderer);
         SDL_RenderCopy(mRenderer, mTexture, nullptr, &renderRect);
         SDL_RenderPresent(mRenderer);
+
+        struct stat dllResult;
+        if (stat(MANYAK_GAME, &dllResult) == 0) {
+            if (lastModified == 0) {
+                lastModified = dllResult.st_mtime;
+            } else if (dllResult.st_mtime != lastModified) {
+                return true;
+            }
+        }
     }
 
-    SDL_Delay(2000);
+    return false;
 }
 
 void Environment::loadTexture(std::string path) {

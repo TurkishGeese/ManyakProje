@@ -5,7 +5,10 @@
 #elif defined(MANYAK_WIN32)
     #include <SDL.h>
 #endif
-#include <iostream>
+
+#include <string>
+
+#include "gameState.hpp"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -16,7 +19,7 @@ public:
     ~Environment();
     
     void initialize();
-    void start();
+    bool start();
     void loadTexture(std::string path);
 
 private:
@@ -24,5 +27,7 @@ private:
     SDL_Renderer *mRenderer = nullptr;
     SDL_Surface *mScreenSurface = nullptr;
     SDL_Texture *mTexture = nullptr;
-    bool mIsWorking = true;
+    bool mIsWorking = false;
+
+    GameState mGameState;
 };
