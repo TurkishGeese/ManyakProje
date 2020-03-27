@@ -24,8 +24,14 @@
             "group": "build"
         },
         {
-            "label": "make",
-            "args": ["make -j 8"],
+            "label": "makeCore",
+            "args": ["make -j 8 manyak_project"],
+            "type": "shell",
+            "group": "build"
+        },
+        {
+            "label": "makeGame ",
+            "args": ["make -j 8 manyak_game"],
             "type": "shell",
             "group": "build"
         },

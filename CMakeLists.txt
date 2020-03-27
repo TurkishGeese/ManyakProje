@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10.2)
 project (manyak_game)
 
 file(GLOB SOURCE "src/*.cpp")
-list(REMOVE_ITEM SOURCE "src/main.cpp")
+list(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 if(WIN32)
     SET(CMAKE_FIND_LIBRARY_PREFIXES "")

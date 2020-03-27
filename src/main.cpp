@@ -9,7 +9,7 @@
 startGameFunction startGameFunc = nullptr;
 getEnvironmentFunction getEnvironmentFunc = nullptr;
 
-void unloadGameDll(bool reload = false) {
+void unloadGameLibrary(bool reload = false) {
     static void* gameDllHandle = nullptr;
     if (gameDllHandle != nullptr) {
         SDL_UnloadObject(gameDllHandle);
@@ -17,14 +17,14 @@ void unloadGameDll(bool reload = false) {
 
     if (reload) {
         try {
-            std::filesystem::copy_file(MANYAK_GAME, "./temp_manyakGame.dll", std::filesystem::copy_options::overwrite_existing);
+            std::filesystem::copy_file(MANYAK_GAME, "./temp_manyakGame", std::filesystem::copy_options::overwrite_existing);
         }
         catch (std::filesystem::filesystem_error & e) {
-            Logger::logError("Filesystem error: " + ((std::error_code)e.code).message());
+            Logger::logError("Filesystem error: " /*+ ((std::error_code)e.code).message()*/);
         }
-        gameDllHandle = SDL_LoadObject("./temp_manyakGame.dll");
+        gameDllHandle = SDL_LoadObject("./temp_manyakGame");
         if (gameDllHandle == nullptr) {
-            Logger::logSdlError("Could not load the game dll.");
+            Logger::logSdlError("Could not load the game library.");
             exit(1);
         }
         
@@ -49,11 +49,11 @@ int main(int argc, const char* argv[]) {
 
 int wmain(int argc, const char* argv[]) {
 #endif
-    unloadGameDll(true);
+    unloadGameLibrary(true);
     Environment* environment = getEnvironmentFunc();
     while (startGameFunc(environment)) {
-        unloadGameDll(true);
+        unloadGameLibrary(true);
         Logger::logError("Successfully reloaded.");
     }
-    unloadGameDll();
+    unloadGameLibrary();
 }
