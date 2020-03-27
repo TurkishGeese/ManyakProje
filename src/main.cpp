@@ -42,12 +42,12 @@ void unloadGameLibrary(bool reload = false) {
     }
 }
 
-#if defined(MANYAK_MAC)
-int main(int argc, const char* argv[]) {
-#elif defined(MANYAK_WIN32)
+#if defined(MANYAK_WIN32)
 #include <Windows.h>
 
 int wmain(int argc, const char* argv[]) {
+#else
+int main(int argc, const char* argv[]) {
 #endif
     unloadGameLibrary(true);
     Environment* environment = getEnvironmentFunc();

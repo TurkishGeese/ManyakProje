@@ -1,12 +1,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#if defined(MANYAK_MAC)
-    #include <SDL2_image/SDL_image.h>
-    #include <unistd.h>
-#elif defined(MANYAK_WIN32)
+#if defined(MANYAK_WIN32)
     #include <SDL_image.h>
     #define stat _stat
+#else
+    #include <SDL2_image/SDL_image.h>
+    #include <unistd.h>
 #endif
 
 #include "environment.hpp"
@@ -14,10 +14,10 @@
 
 #include <filesystem>
 
-#if defined(MANYAK_MAC)
-    std::string resourceDirectory = "../resources/";
-#elif defined(MANYAK_WIN32)
+#if defined(MANYAK_WIN32)
     std::string resourceDirectory = "../../../resources/";
+#else
+    std::string resourceDirectory = "../resources/";
 #endif
 
  
@@ -71,7 +71,7 @@ bool Environment::start() {
     if (!mGameState.initialized) return false;
 
     Logger::logError("Test5");
-    loadTexture(resourceDirectory + "berdem.jpg");
+    loadTexture(resourceDirectory + "Gunes.jpg");
     SDL_Rect renderRect = {0, 0, 320, 240};
 
     bool running = true;
