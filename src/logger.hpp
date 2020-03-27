@@ -1,7 +1,7 @@
 #pragma once
 
 namespace Logger {
-    void logError(const char *error);
-    void logSdlError(const char *error);
-    void logSdlImageError(const char *error);
+    void logError(std::string error);
+    void logSdlError(std::string error);
+    void logSdlImageError(std::string rror);
 };

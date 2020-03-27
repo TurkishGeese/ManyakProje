@@ -10,25 +10,25 @@
 
 #include "logger.hpp"
 
-void Logger::logError(const char *error) {
+void Logger::logError(std::string error) {
     std::string message(error);
     message += "\n";
-    SDL_Log(message.c_str());
+    SDL_Log("%s", message.c_str());
 }
 
-void Logger::logSdlError(const char *error) {
+void Logger::logSdlError(std::string error) {
     std::string message(error);
     message += " SDL_Error: ";
     message += SDL_GetError();
     message += "\n";
-    SDL_Log(message.c_str());
+    SDL_Log("%s", message.c_str());
 }
 
-void Logger::logSdlImageError(const char *error) {
+void Logger::logSdlImageError(std::string error) {
     std::string message(error);
     message += " SDL_Error: ";
     message += IMG_GetError();
     message += "\n";
-    SDL_Log(message.c_str());
+    SDL_Log("%s", message.c_str());
 }
 

@@ -36,7 +36,7 @@ Environment::~Environment() {
 }
 
 void Environment::initialize() {
-    if (mIsWorking) return;
+    if (mGameState.initialized) return;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         Logger::logSdlError("SDL Could not be initialized!");
@@ -63,15 +63,15 @@ void Environment::initialize() {
         return;
     }
 
-    mIsWorking = true;
+    mGameState.initialized = true;
     mScreenSurface = SDL_GetWindowSurface(mWindow);
 }
 
 bool Environment::start() {
-    if (!mIsWorking) return false;
+    if (!mGameState.initialized) return false;
 
-    Logger::logError("Test3");
-    loadTexture(resourceDirectory + "Gunes.jpg");
+    Logger::logError("Test5");
+    loadTexture(resourceDirectory + "berdem.jpg");
     SDL_Rect renderRect = {0, 0, 320, 240};
 
     bool running = true;

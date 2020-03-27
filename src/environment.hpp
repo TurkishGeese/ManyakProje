@@ -27,7 +27,6 @@ private:
     SDL_Renderer *mRenderer = nullptr;
     SDL_Surface *mScreenSurface = nullptr;
     SDL_Texture *mTexture = nullptr;
-    bool mIsWorking = false;
 
     GameState mGameState;
 };
