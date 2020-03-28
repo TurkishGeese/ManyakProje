@@ -15,7 +15,7 @@
 #include <filesystem>
 
 #if defined(MANYAK_WIN32)
-    std::string resourceDirectory = "../../../resources/";
+    std::string resourceDirectory = "../../../../resources/";
 #else
     std::string resourceDirectory = "../resources/";
 #endif
@@ -74,7 +74,6 @@ void Environment::initialize() {
 bool Environment::start() {
     if (!mGameState.initialized) return false;
 
-    Logger::logError("Test5");
     loadTexture(resourceDirectory + "berdem.jpg");
     SDL_Rect renderRect = {0, 0, 320, 240};
 

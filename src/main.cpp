@@ -13,16 +13,21 @@ void unloadGameLibrary(bool reload = false) {
     static void* gameDllHandle = nullptr;
     if (gameDllHandle != nullptr) {
         SDL_UnloadObject(gameDllHandle);
+#ifdef MANYAK_WIN32
+        // Issues with windows holding on to handles for too long while building........
+        // Seems like 80 ms is enough of a delay in most cases but we use .1 sec just in case because this really doesn't need to happen fast.
+        SDL_Delay(100);
+#endif
     }
 
     if (reload) {
         try {
-            std::filesystem::copy_file(MANYAK_GAME, "./temp_manyakGame", std::filesystem::copy_options::overwrite_existing);
+            std::filesystem::copy_file(MANYAK_GAME, RUNNING_MANYAK_GAME, std::filesystem::copy_options::overwrite_existing);
         }
         catch (std::filesystem::filesystem_error & e) {
             Logger::logError("Filesystem error: " + std::string(e.what()));
         }
-        gameDllHandle = SDL_LoadObject("./temp_manyakGame");
+        gameDllHandle = SDL_LoadObject(RUNNING_MANYAK_GAME);
         if (gameDllHandle == nullptr) {
             Logger::logSdlError("Could not load the game library.");
             exit(1);
