@@ -59,7 +59,7 @@ void Environment::initialize() {
         Logger::logSdlError("SDL Could not create a renderer!");
         return;
     }
-    SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 0xFF);
 
     int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {
@@ -69,12 +69,14 @@ void Environment::initialize() {
 
     mGameState.initialized = true;
     mScreenSurface = SDL_GetWindowSurface(mWindow);
+
+    mGameState.players[0].attachController();
 }
 
 bool Environment::start() {
     if (!mGameState.initialized) return false;
 
-    loadTexture(resourceDirectory + "berdem.jpg");
+    loadTexture(resourceDirectory + "Idle.png");
     SDL_Rect renderRect = {0, 0, 320, 240};
 
     bool running = true;
@@ -97,7 +99,11 @@ bool Environment::start() {
         }
         
         SDL_RenderClear(mRenderer);
-        SDL_RenderCopy(mRenderer, mTexture, nullptr, &renderRect);
+        for (int i = 0; i < 4; ++i) {
+            if (mGameState.players[i].isPlaying) {
+                SDL_RenderCopy(mRenderer, mTexture, nullptr, &mGameState.players[i].render());
+            }
+        }
         SDL_RenderPresent(mRenderer);
 
         struct stat dllResult;
