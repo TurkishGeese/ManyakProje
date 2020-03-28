@@ -11,6 +11,7 @@
 
 #include "environment.hpp"
 #include "logger.hpp"
+#include "action.hpp"
 
 #include <filesystem>
 
@@ -59,7 +60,7 @@ void Environment::initialize() {
         Logger::logSdlError("SDL Could not create a renderer!");
         return;
     }
-    SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
     int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {
@@ -77,7 +78,6 @@ bool Environment::start() {
     if (!mGameState.initialized) return false;
 
     loadTexture(resourceDirectory + "Idle.png");
-    SDL_Rect renderRect = {0, 0, 320, 240};
 
     bool running = true;
 
@@ -91,17 +91,41 @@ bool Environment::start() {
                 running = false;
             } else if (e.type == SDL_KEYDOWN) {
                 switch (e.key.keysym.sym ) {
+                    Logger::logError(SDL_GetKeyName(e.key.keysym.sym));
                     case SDLK_ESCAPE:
+                        Logger::logError("esc");
                         running = false;
                         break;
+                    case SDLK_DOWN:
+                        Logger::logError("down");
+                        mGameState.players[0].input(DOWN);
+                        break;
+                    case SDLK_UP:
+                        Logger::logError("up");
+                        mGameState.players[0].input(UP);
+                        break;
+                    case SDLK_LEFT:
+                        Logger::logError("left");
+                        mGameState.players[0].input(LEFT);
+                        break;
+                    case SDLK_RIGHT:
+                        Logger::logError("right");
+                        mGameState.players[0].input(RIGHT);
+                        break;
                 }
+            }
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            if (mGameState.players[i].isPlaying) {
+                mGameState.players[i].update();
             }
         }
         
         SDL_RenderClear(mRenderer);
         for (int i = 0; i < 4; ++i) {
             if (mGameState.players[i].isPlaying) {
-                SDL_RenderCopy(mRenderer, mTexture, nullptr, &mGameState.players[i].render());
+                mGameState.players[i].render(mRenderer, mTexture);
             }
         }
         SDL_RenderPresent(mRenderer);
