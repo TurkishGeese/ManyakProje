@@ -12,7 +12,7 @@ public:
 
 	bool isPlaying = false;
 
-	void update();
+	void update(float delta);
 	void attachController();
 	void render(SDL_Renderer* renderer, SDL_Texture* texture);
 	void input(Action action);

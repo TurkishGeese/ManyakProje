@@ -12,6 +12,7 @@
 #include "environment.hpp"
 #include "logger.hpp"
 #include "action.hpp"
+#include "timer.hpp"
 
 #include <filesystem>
 
@@ -84,7 +85,8 @@ bool Environment::start() {
     SDL_Event e;
 
     long long lastModified = 0;
-
+    
+    Timer fpsTimer;
     while(running) {
         while(SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
@@ -116,9 +118,17 @@ bool Environment::start() {
             }
         }
 
+        float delta = fpsTimer.getElapsedSeconds();
+        int deltaInMs = int(delta * 1000.f);
+        if (deltaInMs < 16) { // 16.666 ms == 60FPS
+            SDL_Delay(16 - deltaInMs);
+            delta += fpsTimer.getElapsedSeconds();
+        } else {
+            Logger::logError("Missed FPS target of 60 this frame.");
+        }
         for (int i = 0; i < 4; ++i) {
             if (mGameState.players[i].isPlaying) {
-                mGameState.players[i].update();
+                mGameState.players[i].update(delta);
             }
         }
         
