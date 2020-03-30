@@ -14,7 +14,7 @@ if(WIN32)
     SET(CMAKE_FIND_LIBRARY_PREFIXES "")
     SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
-    include_directories(3rdParty/SDL2-2.0.12/include 3rdParty/SDL2_image-2.0.5/include)
+    include_directories(3rdParty/SDL2-2.0.12/include 3rdParty/SDL2_image-2.0.5/include 3rdParty/SDL2_ttf-2.0.15/include)
 
     add_definitions(-DMANYAK_WIN32)
     add_definitions(-DRUNNING_MANYAK_GAME="./temp_manyakGame.dll")
@@ -43,8 +43,17 @@ if (NOT SDL_2_image)
   message(FATAL_ERROR "SDL2_image could not be found")
 endif()
 
+if (WIN32)
+    find_library(SDL_2_ttf NAMES SDL2_ttf PATHS 3rdParty/SDL2_ttf-2.0.15/lib/x64)
+else()
+    find_library(SDL_2_ttf SDL2_ttf)
+endif()
+if (NOT SDL_2_ttf)
+  message(FATAL_ERROR "SDL2_ttf could not be found")
+endif()
+
 if(WIN32)
-    file(GLOB DLLS "3rdParty/SDL2-2.0.12/lib/x64/*.dll" "3rdParty/SDL2_image-2.0.5/lib/x64/*.dll")
+    file(GLOB DLLS "3rdParty/SDL2-2.0.12/lib/x64/*.dll" "3rdParty/SDL2_image-2.0.5/lib/x64/*.dll" "3rdParty/SDL2_ttf-2.0.15/lib/x64/*.dll")
     
     set (CMAKE_CXX_FLAGS "/std:c++17")
 else()
@@ -73,13 +82,14 @@ if (WIN32)
     #get_target_property(targetCompileFlags manyak_game CMAKE_CXX_COMPILE_OBJECT)
 endif()
 
-target_link_libraries(manyak_game ${SDL_2} ${SDL_2_image})
+# TODO manyak_project doesn't need to be linked against SDL libraries - SDL2
+target_link_libraries(manyak_game ${SDL_2} ${SDL_2_image} ${SDL_2_ttf})
 
 project(manyak_project)
 
 add_executable(manyak_project "src/main.cpp" "src/logger.cpp") 
 
-target_link_libraries(manyak_project manyak_game ${SDL_2} ${SDL_2_image})
+target_link_libraries(manyak_project manyak_game ${SDL_2} ${SDL_2_image} ${SDL_2_ttf})
 
 if(WIN32)
     # copy the .dll files to the same folder as the executable

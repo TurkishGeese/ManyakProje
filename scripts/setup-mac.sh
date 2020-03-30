@@ -15,9 +15,12 @@ fi
 
 SDL_DMG_LOC="${EXTERNAL_LOC}/SDL2.dmg"
 SDL_IMG_DMG_LOC="${EXTERNAL_LOC}/SDL2_Image.dmg"
+SDL_TTF_DMG_LOC="${EXTERNAL_LOC}/SDL2_ttf.dmg"
+
 
 wget -O ${SDL_DMG_LOC} "https://www.libsdl.org/release/SDL2-2.0.12.dmg" 
 wget -O ${SDL_IMG_DMG_LOC} "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.dmg"
+wget -O ${SDL_TTF_DMG_LOC} "https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.dmg"
 
 # Copy SDL2 to /Library/Framework
 sudo hdiutil attach ${SDL_DMG_LOC}
@@ -28,6 +31,11 @@ sudo hdiutil detach /Volumes/SDL2
 sudo hdiutil attach ${SDL_IMG_DMG_LOC}
 sudo cp -r /Volumes/SDL2_image/SDL2_image.framework /Library/Frameworks
 sudo hdiutil detach /Volumes/SDL2_image
+
+# Copy SDL2_ttf to /Library/Framework
+sudo hdiutil attach ${SDL_TTF_DMG_LOC}
+sudo cp -r /Volumes/SDL2_ttf/SDL2_ttf.framework /Library/Frameworks
+sudo hdiutil detach /Volumes/SDL2_ttf
 
 # Codesign SDL2 and copy the headers over
 cd /Library/Frameworks/SDL2.framework
@@ -40,6 +48,12 @@ cd /Library/Frameworks/SDL2_image.framework
 mkdir $CUR_DIR/$EXTERNAL_LOC/headers/SDL2_image
 sudo cp -r /Library/Frameworks/SDL2_image.framework/Headers/ $CUR_DIR/$EXTERNAL_LOC/headers/SDL2_image
 codesign -f -s - SDL2_image
+
+# Codesign SDL2_ttf and copy the headers over
+cd /Library/Frameworks/SDL2_ttf.framework
+mkdir $CUR_DIR/$EXTERNAL_LOC/headers/SDL2_ttf
+sudo cp -r /Library/Frameworks/SDL2_ttf.framework/Headers/ $CUR_DIR/$EXTERNAL_LOC/headers/SDL2_ttf
+codesign -f -s - SDL2_ttf
 
 cd $CUR_DIR
 
