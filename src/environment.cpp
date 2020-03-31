@@ -9,6 +9,7 @@
 
 #include "manyakSDLimage.hpp"
 
+#include "renderer.hpp"
 #include "environment.hpp"
 #include "logger.hpp"
 #include "action.hpp"
@@ -93,6 +94,7 @@ void Environment::initialize() {
     }
 
     mScreenSurface = SDL_GetWindowSurface(mWindow);
+    Renderer::initialize(mRenderer);
     mGameState.players[0].attachController();
 
     mGameState.initialized = true;
@@ -159,7 +161,7 @@ bool Environment::start() {
         }
 
         SDL_Rect textLoc = { 20, 20, textW, textH };
-        SDL_RenderCopy(mRenderer, mTextTexture, nullptr, &textLoc);
+        Renderer::render(mTextTexture, &textLoc);
 
         SDL_RenderPresent(mRenderer);
 
