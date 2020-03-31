@@ -3,6 +3,7 @@
 #include <string>
 
 #include "manyakSDL.hpp"
+#include "manyakSDLttf.hpp"
 #include "gameState.hpp"
 
 const int SCREEN_WIDTH = 640;
@@ -15,6 +16,7 @@ public:
     
     void initialize();
     bool start();
+    void loadText(std::string text);
     void loadTexture(std::string path);
 
 private:
@@ -22,6 +24,8 @@ private:
     SDL_Renderer *mRenderer = nullptr;
     SDL_Surface *mScreenSurface = nullptr;
     SDL_Texture *mTexture = nullptr;
+    SDL_Texture* mTextTexture = nullptr;
+    TTF_Font* mFont = nullptr;
 
     GameState mGameState;
 };

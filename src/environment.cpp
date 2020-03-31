@@ -2,12 +2,12 @@
 #include <sys/stat.h>
 
 #if defined(MANYAK_WIN32)
-    #include <SDL_image.h>
     #define stat _stat
 #else
-    #include <SDL2_image/SDL_image.h>
     #include <unistd.h>
 #endif
+
+#include "manyakSDLimage.hpp"
 
 #include "environment.hpp"
 #include "logger.hpp"
@@ -26,6 +26,9 @@
 #define MANYAK_GAME 
     // TODO Get rid of this ifndef when we fix TODO #6
 #endif
+
+static int textW = 0;
+static int textH = 0;
  
 Environment::~Environment() {
     if (mTexture != nullptr)
@@ -37,11 +40,31 @@ Environment::~Environment() {
     if (mWindow != nullptr)
         SDL_DestroyWindow(mWindow);
 
+    if (mFont != nullptr)
+        TTF_CloseFont(mFont);
+
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }
 
 void Environment::initialize() {
+
+    if (TTF_Init() == -1) {
+        Logger::logSdlTtfError("SDL_ttf could not be initialized!");
+        return;
+    }
+
+    mFont = TTF_OpenFont((resourceDirectory + "KenneyBold.ttf").c_str(), 28);
+    if (mFont == nullptr) {
+        Logger::logSdlTtfError("Could not initialize the font!");
+        return;
+    }
+
+    // TODO: Investigate why TTF always needs to be reinitialized as a library and fails to load font otherwise.
+    // Currently, we only try to load a texture at the beginning. Will we have the same problem with SDL_image
+    // if we tried to load more stuff later? This is not exactly true since we can dynamically change the picture.
+    // Weird. If TTF state is somehow disappearing, all sorts of other stuff can happen with other SDL libraries.
     if (mGameState.initialized) return;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -69,16 +92,17 @@ void Environment::initialize() {
         return;
     }
 
-    mGameState.initialized = true;
     mScreenSurface = SDL_GetWindowSurface(mWindow);
-
     mGameState.players[0].attachController();
+
+    mGameState.initialized = true;
 }
 
 bool Environment::start() {
     if (!mGameState.initialized) return false;
 
     loadTexture(resourceDirectory + "Idle.png");
+    loadText("Hmm");
 
     bool running = true;
 
@@ -95,23 +119,18 @@ bool Environment::start() {
                 switch (e.key.keysym.sym ) {
                     Logger::logError(SDL_GetKeyName(e.key.keysym.sym));
                     case SDLK_ESCAPE:
-                        Logger::logError("esc");
                         running = false;
                         break;
                     case SDLK_DOWN:
-                        Logger::logError("down");
                         mGameState.players[0].input(DOWN);
                         break;
                     case SDLK_UP:
-                        Logger::logError("up");
                         mGameState.players[0].input(UP);
                         break;
                     case SDLK_LEFT:
-                        Logger::logError("left");
                         mGameState.players[0].input(LEFT);
                         break;
                     case SDLK_RIGHT:
-                        Logger::logError("right");
                         mGameState.players[0].input(RIGHT);
                         break;
                 }
@@ -138,6 +157,10 @@ bool Environment::start() {
                 mGameState.players[i].render(mRenderer, mTexture);
             }
         }
+
+        SDL_Rect textLoc = { 20, 20, textW, textH };
+        SDL_RenderCopy(mRenderer, mTextTexture, nullptr, &textLoc);
+
         SDL_RenderPresent(mRenderer);
 
         struct stat dllResult;
@@ -151,6 +174,22 @@ bool Environment::start() {
     }
 
     return false;
+}
+
+void Environment::loadText(std::string text) {
+    SDL_Color color = { 255, 0, 0 };
+    SDL_Surface *textSurface = TTF_RenderText_Solid(mFont, text.c_str(), color);
+    if (textSurface == nullptr) {
+        Logger::logSdlTtfError("Could not create font surface.");
+        return;
+    }
+    textW = textSurface->w;
+    textH = textSurface->h;
+    mTextTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
+    if (mTextTexture == nullptr) {
+        Logger::logSdlError("Could not create texture from text surface!");
+    }
+    SDL_FreeSurface(textSurface);
 }
 
 void Environment::loadTexture(std::string path) {
