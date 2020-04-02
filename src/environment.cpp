@@ -94,13 +94,13 @@ void Environment::initialize() {
     }
 
     mScreenSurface = SDL_GetWindowSurface(mWindow);
-    Renderer::initialize(mRenderer);
     mGameState.players[0].attachController();
 
     mGameState.initialized = true;
 }
 
 bool Environment::start() {
+    Renderer::initialize(mRenderer);
     if (!mGameState.initialized) return false;
 
     loadTexture(resourceDirectory + "Idle.png");
