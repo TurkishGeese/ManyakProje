@@ -2,11 +2,15 @@
 
 CUR_DIR=$(pwd)
 
-if [[ -d ./3rdParty ]]
+if [[ -d ./resources ]]
 then
+  mkdir -p './3rdParty/headers'
+  mkdir './build'
   EXTERNAL_LOC='./3rdParty'
-elif [[ -d ../3rdParty ]]
+elif [[ -d ../resources ]]
 then
+  mkdir -p '../3rdParty/headers'
+  mkdir '../build'
   EXTERNAL_LOC='../3rdParty'
 else
   echo "Where are you running this script from???"
@@ -18,9 +22,9 @@ SDL_IMG_DMG_LOC="${EXTERNAL_LOC}/SDL2_Image.dmg"
 SDL_TTF_DMG_LOC="${EXTERNAL_LOC}/SDL2_ttf.dmg"
 
 
-wget -O ${SDL_DMG_LOC} "https://www.libsdl.org/release/SDL2-2.0.12.dmg" 
-wget -O ${SDL_IMG_DMG_LOC} "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.dmg"
-wget -O ${SDL_TTF_DMG_LOC} "https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.dmg"
+curl -o ${SDL_DMG_LOC} "https://www.libsdl.org/release/SDL2-2.0.12.dmg" 
+curl -o ${SDL_IMG_DMG_LOC} "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.dmg"
+curl -o ${SDL_TTF_DMG_LOC} "https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.dmg"
 
 # Copy SDL2 to /Library/Framework
 sudo hdiutil attach ${SDL_DMG_LOC}
