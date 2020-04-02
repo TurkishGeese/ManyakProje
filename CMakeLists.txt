@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10.2)
 
 project (manyak_game)
 
-file(GLOB SOURCE "src/*.cpp")
+file(GLOB_RECURSE SOURCE "src/*.cpp")
 list(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 if (WIN32)
@@ -14,7 +14,14 @@ if(WIN32)
     SET(CMAKE_FIND_LIBRARY_PREFIXES "")
     SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
-    include_directories(3rdParty/SDL2-2.0.12/include 3rdParty/SDL2_image-2.0.5/include 3rdParty/SDL2_ttf-2.0.15/include)
+    include_directories(3rdParty/SDL2-2.0.12/include
+                        3rdParty/SDL2_image-2.0.5/include
+                        3rdParty/SDL2_ttf-2.0.15/include
+                        src
+                        src/levels
+                        src/objects
+                        src/objects/gameObjects
+                        src/objects/uiObjects)
 
     add_definitions(-DMANYAK_WIN32)
     add_definitions(-DRUNNING_MANYAK_GAME="./temp_manyakGame.dll")
