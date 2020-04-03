@@ -5,6 +5,7 @@
 ### MAC
 
 Currently only vscode is supported.
+Make sure cmake is intalled and it's binary location added into PATH variable.
 Change your directory to the code base directory.
 Run:
 
