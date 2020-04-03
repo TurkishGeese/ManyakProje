@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Logger {
     void logError(std::string error);
     void logSdlError(std::string error);

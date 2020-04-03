@@ -1,10 +1,10 @@
 #include "uiText.hpp"
 
-#include "../../manyakSDLttf.hpp"
+#include "manyakSDLttf.hpp"
 
-#include "../../renderer.hpp"
-#include "../../logger.hpp"
-#include "../../environment.hpp"
+#include "renderer.hpp"
+#include "logger.hpp"
+#include "environment.hpp"
 
 UIText::UIText(std::string text, int x, int y, SDL_Color color){
     SDL_Surface *textSurface = TTF_RenderText_Solid(Environment::sFont, text.c_str(), color);

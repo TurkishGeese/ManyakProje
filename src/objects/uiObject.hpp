@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../manyakSDL.hpp"
+#include "manyakSDL.hpp"
 
 class UIObject {
 

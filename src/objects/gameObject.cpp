@@ -1,5 +1,5 @@
 #include "gameObject.hpp"
-#include "../renderer.hpp"
+#include "renderer.hpp"
 
 void GameObject::render() {
 	if (isClipped)

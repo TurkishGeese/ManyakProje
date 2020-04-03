@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../manyakSDL.hpp"
-#include "../action.hpp"
+#include "manyakSDL.hpp"
+#include "action.hpp"
 
 class GameObject {
 

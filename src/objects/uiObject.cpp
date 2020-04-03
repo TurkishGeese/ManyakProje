@@ -1,6 +1,6 @@
 #include "uiObject.hpp"
 
-#include "../renderer.hpp"
+#include "renderer.hpp"
 
 UIObject::~UIObject() {
     if (mTexture != nullptr)

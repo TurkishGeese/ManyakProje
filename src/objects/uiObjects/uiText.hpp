@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../uiObject.hpp"
+#include "uiObject.hpp"
 
 #include <string>
 

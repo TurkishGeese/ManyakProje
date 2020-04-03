@@ -1,6 +1,6 @@
 #include "player.hpp"
 
-#include "../../renderer.hpp"
+#include "renderer.hpp"
 
 // TODO BAH hate that it's in two locations. should move this to a utility class.
 #if defined(MANYAK_WIN32)
