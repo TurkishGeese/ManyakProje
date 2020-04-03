@@ -14,6 +14,10 @@
 #include "logger.hpp"
 #include "action.hpp"
 #include "timer.hpp"
+#include "objects/gameObject.hpp"
+#include "objects/uiObject.hpp"
+#include "objects/gameObjects/player.hpp"
+#include "objects/uiObjects/uiText.hpp"
 
 #include <filesystem>
 
@@ -28,21 +32,17 @@
     // TODO Get rid of this ifndef when we fix TODO #6
 #endif
 
-static int textW = 0;
-static int textH = 0;
+TTF_Font* Environment::sFont = nullptr;
  
 Environment::~Environment() {
-    if (mTexture != nullptr)
-        SDL_DestroyTexture(mTexture);
-
     if (mRenderer != nullptr)
         SDL_DestroyRenderer(mRenderer);
 
     if (mWindow != nullptr)
         SDL_DestroyWindow(mWindow);
 
-    if (mFont != nullptr)
-        TTF_CloseFont(mFont);
+    if (sFont != nullptr)
+        TTF_CloseFont(sFont);
 
     TTF_Quit();
     IMG_Quit();
@@ -56,8 +56,8 @@ void Environment::initialize() {
         return;
     }
 
-    mFont = TTF_OpenFont((resourceDirectory + "KenneyBold.ttf").c_str(), 28);
-    if (mFont == nullptr) {
+    sFont = TTF_OpenFont((resourceDirectory + "KenneyBold.ttf").c_str(), 28);
+    if (sFont == nullptr) {
         Logger::logSdlTtfError("Could not initialize the font!");
         return;
     }
@@ -94,7 +94,6 @@ void Environment::initialize() {
     }
 
     mScreenSurface = SDL_GetWindowSurface(mWindow);
-    mGameState.players[0].attachController();
 
     mGameState.initialized = true;
 }
@@ -103,12 +102,12 @@ bool Environment::start() {
     Renderer::initialize(mRenderer);
     if (!mGameState.initialized) return false;
 
-    loadTexture(resourceDirectory + "Idle.png");
-    loadText("Hmm");
-
     bool running = true;
 
     SDL_Event e;
+
+    GameObject* gp = new Player();
+    UIObject* ui = new UIText("Bora", 0, 0, {255, 0, 0});
 
     long long lastModified = 0;
     
@@ -124,16 +123,16 @@ bool Environment::start() {
                         running = false;
                         break;
                     case SDLK_DOWN:
-                        mGameState.players[0].input(DOWN);
+                        gp->input(DOWN);
                         break;
                     case SDLK_UP:
-                        mGameState.players[0].input(UP);
+                        gp->input(UP);
                         break;
                     case SDLK_LEFT:
-                        mGameState.players[0].input(LEFT);
+                        gp->input(LEFT);
                         break;
                     case SDLK_RIGHT:
-                        mGameState.players[0].input(RIGHT);
+                        gp->input(RIGHT);
                         break;
                 }
             }
@@ -147,21 +146,12 @@ bool Environment::start() {
         } else {
             Logger::logError("Missed FPS target of 60 this frame.");
         }
-        for (int i = 0; i < 4; ++i) {
-            if (mGameState.players[i].isPlaying) {
-                mGameState.players[i].update(delta);
-            }
-        }
+
+        gp->update(delta);
         
         SDL_RenderClear(mRenderer);
-        for (int i = 0; i < 4; ++i) {
-            if (mGameState.players[i].isPlaying) {
-                mGameState.players[i].render(mRenderer, mTexture);
-            }
-        }
-
-        SDL_Rect textLoc = { 20, 20, textW, textH };
-        Renderer::render(mTextTexture, &textLoc);
+        gp->render();
+        ui->render();
 
         SDL_RenderPresent(mRenderer);
 
@@ -170,42 +160,14 @@ bool Environment::start() {
             if (lastModified == 0) {
                 lastModified = dllResult.st_mtime;
             } else if (dllResult.st_mtime != lastModified) {
+                delete gp;
+                delete ui;
                 return true;
             }
         }
     }
 
+    delete gp;
+    delete ui;
     return false;
-}
-
-void Environment::loadText(std::string text) {
-    SDL_Color color = { 255, 0, 0 };
-    SDL_Surface *textSurface = TTF_RenderText_Solid(mFont, text.c_str(), color);
-    if (textSurface == nullptr) {
-        Logger::logSdlTtfError("Could not create font surface.");
-        return;
-    }
-    textW = textSurface->w;
-    textH = textSurface->h;
-    mTextTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
-    if (mTextTexture == nullptr) {
-        Logger::logSdlError("Could not create texture from text surface!");
-    }
-    SDL_FreeSurface(textSurface);
-}
-
-void Environment::loadTexture(std::string path) {
-    SDL_Texture *newTexture = nullptr;
-    SDL_Surface *loadedSurface = IMG_Load(path.c_str());
-    if (loadedSurface == nullptr) {
-        Logger::logSdlImageError("Could not load image!");
-        return;
-    }
-    newTexture = SDL_CreateTextureFromSurface(mRenderer, loadedSurface);
-    if (newTexture == nullptr) {
-        Logger::logSdlImageError("Could not create texture from image!");
-    } else {
-        mTexture = newTexture;
-    }
-    SDL_FreeSurface(loadedSurface);
 }

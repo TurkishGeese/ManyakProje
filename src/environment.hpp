@@ -19,13 +19,11 @@ public:
     void loadText(std::string text);
     void loadTexture(std::string path);
 
+    static TTF_Font* sFont;
 private:
     SDL_Window *mWindow = nullptr;
     SDL_Renderer *mRenderer = nullptr;
     SDL_Surface *mScreenSurface = nullptr;
-    SDL_Texture *mTexture = nullptr;
-    SDL_Texture* mTextTexture = nullptr;
-    TTF_Font* mFont = nullptr;
 
     GameState mGameState;
 };
