@@ -102,9 +102,7 @@ bool Environment::start() {
 
     SDL_Event e;
 
-    Logger::logError("1");
     Level* level = new FreeForAllLevel();
-    Logger::logError("2");
 
     long long lastModified = 0;
     
@@ -144,16 +142,10 @@ bool Environment::start() {
             Logger::logError("Missed FPS target of 60 this frame.");
         }
 
-
-    Logger::logError("3");
         level->update(delta);
 
-    Logger::logError("4");
-        
         SDL_RenderClear(mRenderer);
         level->render();
-
-    Logger::logError("5");
 
         SDL_RenderPresent(mRenderer);
 
