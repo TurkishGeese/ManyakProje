@@ -6,6 +6,7 @@
 
 Currently only vscode is supported.
 Change your directory to the code base directory.
+Download cmake and add it's binary's location to the PATH variable.
 Run:
 
 ```
