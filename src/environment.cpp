@@ -17,8 +17,6 @@
 #include "level.hpp"
 #include "freeForAllLevel.hpp"
 
-#include <filesystem>
-
 #if defined(MANYAK_WIN32)
     std::string resourceDirectory = "../../../../resources/";
 #else
