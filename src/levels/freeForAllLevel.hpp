@@ -4,4 +4,6 @@
 
 class FreeForAllLevel : public Level {
 
+public:
+    FreeForAllLevel();
 };

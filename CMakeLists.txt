@@ -26,6 +26,11 @@ if(WIN32)
     add_definitions(-DMANYAK_WIN32)
     add_definitions(-DRUNNING_MANYAK_GAME="./temp_manyakGame.dll")
 else()
+    include_directories(src
+                        src/levels
+                        src/objects
+                        src/objects/gameObjects
+                        src/objects/uiObjects)
     add_definitions(-DMANYAK_MAC)
     add_definitions(-DRUNNING_MANYAK_GAME="./temp_manyakGame")
 endif()
@@ -64,7 +69,7 @@ if(WIN32)
     
     set (CMAKE_CXX_FLAGS "/std:c++17")
 else()
-    set (CMAKE_CXX_FLAGS "-Wall -Werror -std=c++17")
+    set (CMAKE_CXX_FLAGS "-Wall -Werror -std=c++17 -stdlib=libc++")
 endif()
 
 add_library(manyak_game SHARED ${SOURCE})

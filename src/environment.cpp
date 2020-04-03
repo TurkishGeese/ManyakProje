@@ -14,10 +14,8 @@
 #include "logger.hpp"
 #include "action.hpp"
 #include "timer.hpp"
-#include "objects/gameObject.hpp"
-#include "objects/uiObject.hpp"
-#include "objects/gameObjects/player.hpp"
-#include "objects/uiObjects/uiText.hpp"
+#include "level.hpp"
+#include "freeForAllLevel.hpp"
 
 #include <filesystem>
 
@@ -106,8 +104,9 @@ bool Environment::start() {
 
     SDL_Event e;
 
-    GameObject* gp = new Player();
-    UIObject* ui = new UIText("Bora", 0, 0, {255, 0, 0});
+    Logger::logError("1");
+    Level* level = new FreeForAllLevel();
+    Logger::logError("2");
 
     long long lastModified = 0;
     
@@ -123,16 +122,16 @@ bool Environment::start() {
                         running = false;
                         break;
                     case SDLK_DOWN:
-                        gp->input(DOWN);
+                        //gp->input(DOWN);
                         break;
                     case SDLK_UP:
-                        gp->input(UP);
+                        //gp->input(UP);
                         break;
                     case SDLK_LEFT:
-                        gp->input(LEFT);
+                        //gp->input(LEFT);
                         break;
                     case SDLK_RIGHT:
-                        gp->input(RIGHT);
+                        //gp->input(RIGHT);
                         break;
                 }
             }
@@ -147,11 +146,16 @@ bool Environment::start() {
             Logger::logError("Missed FPS target of 60 this frame.");
         }
 
-        gp->update(delta);
+
+    Logger::logError("3");
+        level->update(delta);
+
+    Logger::logError("4");
         
         SDL_RenderClear(mRenderer);
-        gp->render();
-        ui->render();
+        level->render();
+
+    Logger::logError("5");
 
         SDL_RenderPresent(mRenderer);
 
@@ -160,14 +164,12 @@ bool Environment::start() {
             if (lastModified == 0) {
                 lastModified = dllResult.st_mtime;
             } else if (dllResult.st_mtime != lastModified) {
-                delete gp;
-                delete ui;
+                delete level;
                 return true;
             }
         }
     }
 
-    delete gp;
-    delete ui;
+    delete level;
     return false;
 }
