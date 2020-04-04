@@ -32,6 +32,26 @@ InputState InputManager::getInputState(GameObject* obj, SDL_Keycode key) {
     return sInstance->internalGetInputState(obj, key);
 }
 
+InputState InputManager::getInputState(InputKey key) {
+    return sInstance->internalGetInputState(key);
+}
+
+Vec2 InputManager::getMouseLocation() {
+    return sInstance->internalGetMouseLocation();
+}
+
+bool InputManager::ctrlDown() {
+    return sInstance->internalCtrlDown();
+}
+
+bool InputManager::altDown() {
+    return sInstance->internalAltDown();
+}
+
+bool InputManager::shiftDown() {
+    return sInstance->internalShiftDown();
+}
+
 InputManager::InputManager() {}
 
 void InputManager::internalReset() {
@@ -67,4 +87,24 @@ InputState InputManager::internalGetInputState(SDL_Keycode key) {
 
 InputState InputManager::internalGetInputState(GameObject* obj, SDL_Keycode key) {
     return mInputMapping[obj]->getInputState(key);
+}
+
+InputState InputManager::internalGetInputState(InputKey key) {
+    return mKeyboard.getInputState(key);
+}
+
+Vec2 InputManager::internalGetMouseLocation() {
+    return mKeyboard.getMouseLocation();
+}
+
+bool InputManager::internalCtrlDown() {
+    return mKeyboard.ctrlDown();
+}
+
+bool InputManager::internalAltDown() {
+    return mKeyboard.altDown();
+}
+
+bool InputManager::internalShiftDown() {
+    return mKeyboard.shiftDown();
 }
