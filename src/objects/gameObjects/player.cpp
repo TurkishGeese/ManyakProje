@@ -1,6 +1,7 @@
 #include "player.hpp"
 
 #include "renderer.hpp"
+#include "inputManager.hpp"
 
 // TODO BAH hate that it's in two locations. should move this to a utility class.
 #if defined(MANYAK_WIN32)
@@ -20,25 +21,21 @@ Player::Player() {
 }
 
 void Player::update(float delta) {
-	switch(mAction) {
-		case UP:
-			mPosY -= 500.0f * delta;
-			break;
-		case DOWN:
-			mPosY += 500.0f * delta;
-			break;
-		case LEFT:
-			mPosX -= 500.0f * delta;
-			break;
-		case RIGHT:
-			mPosX += 500.0f * delta;
-			break;
-		default:;
+	if (InputManager::getInputState(this, SDLK_UP)) {
+		mPosY -= 500.0f * delta;
 	}
-	mAction = NONE;
-    mRenderBox = { (int)mPosX, (int)mPosY, 320, 240 };
-}
+	
+	if(InputManager::getInputState(this, SDLK_DOWN)) {
+		mPosY += 500.0f * delta;
+	}
+	
+	if (InputManager::getInputState(this, SDLK_LEFT)) {
+		mPosX -= 500.0f * delta;
+	}
+	
+	if (InputManager::getInputState(this, SDLK_RIGHT)) {
+		mPosX += 500.0f * delta;
+	}
 
-void Player::input(Action action) {
-    mAction = action;
+    mRenderBox = { (int)mPosX, (int)mPosY, 320, 240 };
 }
