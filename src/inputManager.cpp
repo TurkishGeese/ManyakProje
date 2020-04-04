@@ -17,7 +17,7 @@ void InputManager::reset() {
 }
 
 void InputManager::registerObject(GameObject* obj, InputType inputType) {
-    sInstance->internalRegisterObject(obj);
+    sInstance->internalRegisterObject(obj, inputType);
 }
 
 void InputManager::updateInput() {
@@ -25,11 +25,11 @@ void InputManager::updateInput() {
 }
 
 InputState InputManager::getInputState(SDL_Keycode key) {
-    return sInstance->getInputState(obj, key);
+    return sInstance->internalGetInputState(key);
 }
 
 InputState InputManager::getInputState(GameObject* obj, SDL_Keycode key) {
-    return sInstance->getInputState(obj, key);
+    return sInstance->internalGetInputState(obj, key);
 }
 
 InputManager::InputManager() {}

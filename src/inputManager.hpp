@@ -7,6 +7,7 @@
 #include "inputType.hpp"
 #include "keyboardInput.hpp"
 #include "aiInput.hpp"
+#include "gameObject.hpp"
 
 class InputManager {
 
