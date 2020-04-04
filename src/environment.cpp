@@ -68,7 +68,7 @@ void Environment::initialize() {
     // Weird. If TTF state is somehow disappearing, all sorts of other stuff can happen with other SDL libraries.
     if (mGameState.initialized) return;
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
         Logger::logSdlError("SDL Could not be initialized!");
         return;
     }

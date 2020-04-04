@@ -7,6 +7,9 @@
 8. Currently we render using pos, width and height. Ideally we would like to specify only a position and then the texture is just slapped on correctly. I think this position should be the center of the texture but it might be useful to have the position as the top left of the texture as well. We just need to pick one for now.
 9. Instead of letting things fail, we should put asserts with detailed messages. For example, there should never be a problem with loading a texture and if there is, the game should just crash and tell us exactly what happened.
 10. TextureManager instead of reloading same textures multiple times.
+11. Shouldn't require controllers to be connected at the start of the game.
+12. Controller errors should be handled more gracefully because they can easily connect/disconnect.
+13. Should support axis movement on controllers.
 
 # COMPLETED
 2. Hotloading

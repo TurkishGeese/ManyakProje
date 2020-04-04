@@ -9,7 +9,9 @@ class KeyboardInput : public Input {
 public:
 	InputState getInputState(SDL_Keycode key) override;
 	InputState getInputState(InputKey key) override;
-	void updateInput() override;
+	void updateInput(SDL_Event& e) override;
+
+	void preUpdateInput();
 	Vec2 getMouseLocation();
 	bool ctrlDown();
 	bool altDown();

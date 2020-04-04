@@ -18,7 +18,7 @@ InputState KeyboardInput::getInputState(InputKey key) {
 	return iterator->second;
 }
 
-void KeyboardInput::updateInput() {
+void KeyboardInput::preUpdateInput() {
 	// If the key was pressed earlier, now it's being held.
 	// If the key was released earlier, now it has no state.
 	for (std::map<SDL_Keycode, InputState>::iterator it = mInputStates.begin(); it != mInputStates.end();)
@@ -52,31 +52,26 @@ void KeyboardInput::updateInput() {
 		}
 	}
 
-	SDL_Event e;
-	while (SDL_PollEvent(&e) != 0) {
-		if (e.type == SDL_QUIT) {
-			// TODO there has to be a nicer way of exiting the game
-			exit(0);
-		}
-		else if (e.type == SDL_KEYDOWN) {
-			mInputStates[e.key.keysym.sym] = PRESSED;
-		}
-		else if (e.type == SDL_KEYUP) {
-			mInputStates[e.key.keysym.sym] = RELEASED;
-		}
-		else if (e.type == SDL_MOUSEBUTTONDOWN) {
-			mMouseStates[getInputKey(e.button)] = PRESSED;
-		}
-		else if (e.type == SDL_MOUSEBUTTONUP) {
-			mMouseStates[getInputKey(e.button)] = RELEASED;
-		}
-	}
-
 	int x, y;
 	SDL_GetMouseState(&x, &y);
 	mMouseLoc = { (float)x, (float)y };
 
 	mModState = SDL_GetModState();
+}
+
+void KeyboardInput::updateInput(SDL_Event& e) {
+	if (e.type == SDL_KEYDOWN) {
+		mInputStates[e.key.keysym.sym] = PRESSED;
+	}
+	else if (e.type == SDL_KEYUP) {
+		mInputStates[e.key.keysym.sym] = RELEASED;
+	}
+	else if (e.type == SDL_MOUSEBUTTONDOWN) {
+		mMouseStates[getInputKeyFromMouseButton(e.button)] = PRESSED;
+	}
+	else if (e.type == SDL_MOUSEBUTTONUP) {
+		mMouseStates[getInputKeyFromMouseButton(e.button)] = RELEASED;
+	}
 }
 
 Vec2 KeyboardInput::getMouseLocation() {

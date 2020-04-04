@@ -52,7 +52,28 @@ bool InputManager::shiftDown() {
     return sInstance->internalShiftDown();
 }
 
-InputManager::InputManager() {}
+InputManager::InputManager() {
+    for (int i = 0; i < SDL_NumJoysticks(); ++i) {
+        if (SDL_IsGameController(i)) {
+            if (!mController1.isConnected()) {
+                mController1.connectToController(i);
+            }
+            else if (!mController2.isConnected()) {
+                mController2.connectToController(i);
+            }
+            else if (!mController3.isConnected()) {
+                mController3.connectToController(i);
+            }
+            else if (!mController4.isConnected()) {
+                mController4.connectToController(i);
+            }
+            else {
+                Logger::logError("More than 4 controllers are connected!");
+            }
+        }
+    }
+
+}
 
 void InputManager::internalReset() {
     mInputMapping.clear();
@@ -66,8 +87,26 @@ void InputManager::internalRegisterObject(GameObject* obj, InputType inputType) 
         mInputMapping[obj] = &mAiInput;
     }
     else if (inputType == CONTROLLER) {
-        // TODO controllers. Should grab a new controller here?
-        mInputMapping[obj] = nullptr;
+        if (!mController1Used) {
+            mController1Used = true;
+            mInputMapping[obj] = &mController1;
+        }
+        else if (!mController3Used) {
+            mController3Used = true;
+            mInputMapping[obj] = &mController3;
+        }
+        else if (!mController3Used) {
+            mController3Used = true;
+            mInputMapping[obj] = &mController3;
+        }
+        else if (!mController4Used) {
+            mController4Used = true;
+            mInputMapping[obj] = &mController4;
+        }
+        else {
+            Logger::logError("Tried to register more than 4 objects to controllers.");
+            exit(1);
+        }
     }
     else {
         // TODO assert
@@ -77,8 +116,53 @@ void InputManager::internalRegisterObject(GameObject* obj, InputType inputType) 
 }
 
 void InputManager::internalUpdateInput() {
-    mKeyboard.updateInput();
-    mAiInput.updateInput();
+    mKeyboard.preUpdateInput();
+    mController1.preUpdateInput();
+    mController2.preUpdateInput();
+    mController3.preUpdateInput();
+    mController4.preUpdateInput();
+
+    SDL_Event e;
+    while (SDL_PollEvent(&e) != 0) {
+        if (e.type == SDL_QUIT) {
+            // TODO there has to be a nicer way of exiting the game
+            exit(0);
+        }
+
+        if (e.type == SDL_KEYDOWN ||
+            e.type == SDL_KEYUP ||
+            e.type == SDL_MOUSEBUTTONDOWN ||
+            e.type == SDL_MOUSEBUTTONUP) {
+            mKeyboard.updateInput(e);
+        }
+        else if (e.type == SDL_CONTROLLERAXISMOTION ||
+            e.type == SDL_CONTROLLERBUTTONDOWN ||
+            e.type == SDL_CONTROLLERBUTTONUP) {
+            // NOTE: Technically if the event is an axis event we're supposed to access event as e.caxis. However, since e is just a union and the layout of
+            // e.caxis and e.cbutton is the same until the which field, we can just cast it like this and not worry about it.
+            if (e.cbutton.which == mController1.getControllerId()) {
+                mController1.updateInput(e);
+            }
+            else if (e.cbutton.which == mController2.getControllerId()) {
+                mController2.updateInput(e);
+            }
+            else if (e.cbutton.which == mController3.getControllerId()) {
+                mController3.updateInput(e);
+            }
+            else if (e.cbutton.which == mController4.getControllerId()) {
+                mController4.updateInput(e);
+            }
+            else {
+                Logger::logError("An event came from a controller that we don't look at?");
+            }
+        }
+        else if (e.type == SDL_CONTROLLERDEVICEADDED ||
+            e.type == SDL_CONTROLLERDEVICEREMOVED) {
+            // TODO Handle controller connect/disconnect
+        }
+    }
+
+    mAiInput.updateInput(e); // e is ignored
 }
 
 InputState InputManager::internalGetInputState(SDL_Keycode key) {
