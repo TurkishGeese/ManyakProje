@@ -7,10 +7,12 @@
     #include <unistd.h>
 #endif
 
+#include "environment.hpp"
+
 #include "manyakSDLimage.hpp"
 
 #include "renderer.hpp"
-#include "environment.hpp"
+#include "inputManager.hpp"
 #include "logger.hpp"
 #include "action.hpp"
 #include "timer.hpp"
@@ -31,6 +33,9 @@
 TTF_Font* Environment::sFont = nullptr;
  
 Environment::~Environment() {
+    InputManager::quit();
+    Renderer::quit();
+
     if (mRenderer != nullptr)
         SDL_DestroyRenderer(mRenderer);
 
@@ -96,6 +101,7 @@ void Environment::initialize() {
 
 bool Environment::start() {
     Renderer::initialize(mRenderer);
+    InputManager::initialize();
     if (!mGameState.initialized) return false;
 
     bool running = true;
@@ -108,30 +114,7 @@ bool Environment::start() {
     
     Timer fpsTimer;
     while(running) {
-        while(SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) {
-                running = false;
-            } else if (e.type == SDL_KEYDOWN) {
-                switch (e.key.keysym.sym ) {
-                    Logger::logError(SDL_GetKeyName(e.key.keysym.sym));
-                    case SDLK_ESCAPE:
-                        running = false;
-                        break;
-                    case SDLK_DOWN:
-                        //gp->input(DOWN);
-                        break;
-                    case SDLK_UP:
-                        //gp->input(UP);
-                        break;
-                    case SDLK_LEFT:
-                        //gp->input(LEFT);
-                        break;
-                    case SDLK_RIGHT:
-                        //gp->input(RIGHT);
-                        break;
-                }
-            }
-        }
+        InputManager::updateInput();
 
         float delta = fpsTimer.getElapsedSeconds();
         int deltaInMs = int(delta * 1000.f);

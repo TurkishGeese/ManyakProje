@@ -1,7 +1,8 @@
 #include "level.hpp"
 
-#include "logger.hpp"
 #include <string>
+
+#include "inputManager.hpp"
 
 Level::~Level() {
 	for (GameObject* obj : mGameObjects) {
@@ -11,6 +12,7 @@ Level::~Level() {
     for (UIObject* obj : mUiObjects) {
         delete obj;
     }
+    InputManager::reset();
 }
 
 void Level::update(float delta) {
