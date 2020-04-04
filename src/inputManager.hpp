@@ -21,6 +21,12 @@ public:
 	static InputState getInputState(SDL_Keycode key); // This function should only be called by the level
 	// TODO there should be a higher level of abstraction on objects called an Object. The below function should be able to take UIObjects as well.
 	static InputState getInputState(GameObject* obj, SDL_Keycode key); // This function should only be called by objects
+	static InputState getInputState(InputKey key); // Temporary function until we move SDL_Keycodes to InputKey
+
+	static Vec2 getMouseLocation();
+	static bool ctrlDown();
+	static bool altDown();
+	static bool shiftDown();
 
 private:
 	InputManager();
@@ -31,6 +37,11 @@ private:
 	void internalUpdateInput();
 	InputState internalGetInputState(SDL_Keycode key);
 	InputState internalGetInputState(GameObject* obj, SDL_Keycode key);
+	InputState internalGetInputState(InputKey key);
+	Vec2 internalGetMouseLocation();
+	bool internalCtrlDown();
+	bool internalAltDown();
+	bool internalShiftDown();
 
 	static InputManager* sInstance;
 

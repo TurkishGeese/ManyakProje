@@ -9,6 +9,15 @@ InputState KeyboardInput::getInputState(SDL_Keycode key) {
 	return iterator->second;
 }
 
+InputState KeyboardInput::getInputState(InputKey key) {
+	auto iterator = mMouseStates.find(key);
+	if (iterator == mMouseStates.end()) {
+		return NONE;
+	}
+
+	return iterator->second;
+}
+
 void KeyboardInput::updateInput() {
 	// If the key was pressed earlier, now it's being held.
 	// If the key was released earlier, now it has no state.
@@ -30,6 +39,18 @@ void KeyboardInput::updateInput() {
 			mInputStates.erase(curIt->first);
 		}
 	}
+	for (std::map<InputKey, InputState>::iterator it = mMouseStates.begin(); it != mMouseStates.end();)
+	{
+		auto curIt = it;
+		it++;
+
+		if (curIt->second == PRESSED) {
+			mMouseStates[curIt->first] = HELD;
+		}
+		else if (curIt->second == RELEASED) {
+			mMouseStates.erase(curIt->first);
+		}
+	}
 
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0) {
@@ -43,10 +64,35 @@ void KeyboardInput::updateInput() {
 		else if (e.type == SDL_KEYUP) {
 			mInputStates[e.key.keysym.sym] = RELEASED;
 		}
-		// TODO on keyup and keydown, we will probably need modifiers (e.key.keysym.mod) such as ctrl and alt.
-		// Should find a way to record these as well.
-		// TODO mouse movements
+		else if (e.type == SDL_MOUSEBUTTONDOWN) {
+			mMouseStates[getInputKey(e.button)] = PRESSED;
+		}
+		else if (e.type == SDL_MOUSEBUTTONUP) {
+			mMouseStates[getInputKey(e.button)] = RELEASED;
+		}
 	}
+
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+	mMouseLoc = { (float)x, (float)y };
+
+	mModState = SDL_GetModState();
+}
+
+Vec2 KeyboardInput::getMouseLocation() {
+	return mMouseLoc;
+}
+
+bool KeyboardInput::ctrlDown() {
+	return mModState & KMOD_CTRL;
+}
+
+bool KeyboardInput::altDown() {
+	return mModState & KMOD_ALT;
+}
+
+bool KeyboardInput::shiftDown() {
+	return mModState & KMOD_SHIFT;
 }
 
 KeyboardInput::~KeyboardInput() {}
