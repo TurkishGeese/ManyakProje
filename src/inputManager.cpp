@@ -1,5 +1,7 @@
 #include "inputManager.hpp"
 
+#include "logger.hpp"
+
 InputManager* InputManager::sInstance = nullptr;
 
 void InputManager::initialize() {
@@ -9,7 +11,6 @@ void InputManager::initialize() {
 void InputManager::quit() {
     delete sInstance;
 }
-
 
 void InputManager::reset() {
     sInstance->internalReset();
@@ -38,20 +39,32 @@ void InputManager::internalReset() {
 }
 
 void InputManager::internalRegisterObject(GameObject* obj, InputType inputType) {
-    // TODO register object with the correct input
+    if (inputType == KEYBOARD) {
+        mInputMapping[obj] = &mKeyboard;
+    }
+    else if (inputType == AI_PLAYER) {
+        mInputMapping[obj] = &mAiInput;
+    }
+    else if (inputType == CONTROLLER) {
+        // TODO controllers. Should grab a new controller here?
+        mInputMapping[obj] = nullptr;
+    }
+    else {
+        // TODO assert
+        Logger::logError("Invalid input type given to register object.");
+        exit(1);
+    }
 }
 
 void InputManager::internalUpdateInput() {
-    // TODO update input states
-    //mKeyboard.updateInput();
+    mKeyboard.updateInput();
+    mAiInput.updateInput();
 }
 
 InputState InputManager::internalGetInputState(SDL_Keycode key) {
-    //mKeyboard.getInputState(key);
-    return NONE;
+    return mKeyboard.getInputState(key);
 }
 
 InputState InputManager::internalGetInputState(GameObject* obj, SDL_Keycode key) {
-    //return mInputMapping[obj]->getInputState(key);
-    return NONE;
+    return mInputMapping[obj]->getInputState(key);
 }

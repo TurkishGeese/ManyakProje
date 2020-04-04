@@ -6,6 +6,7 @@
 #include "inputState.hpp"
 #include "inputType.hpp"
 #include "keyboardInput.hpp"
+#include "aiInput.hpp"
 
 class InputManager {
 
@@ -33,5 +34,6 @@ private:
 	static InputManager* sInstance;
 
 	KeyboardInput mKeyboard;
+	AIInput mAiInput;
 	std::map<GameObject*, Input*> mInputMapping = std::map<GameObject*, Input*>();
 };
