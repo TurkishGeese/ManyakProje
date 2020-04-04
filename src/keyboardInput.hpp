@@ -1,6 +1,7 @@
 #pragma once
 
 #include "input.hpp"
+#include <map>
 
 class KeyboardInput : public Input {
 
@@ -9,4 +10,7 @@ public:
 	void updateInput() override;
 
 	~KeyboardInput();
+private:
+
+	std::map<SDL_Keycode, InputState> mInputStates = std::map<SDL_Keycode, InputState>();
 };
