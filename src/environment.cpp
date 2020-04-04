@@ -14,7 +14,6 @@
 #include "renderer.hpp"
 #include "inputManager.hpp"
 #include "logger.hpp"
-#include "action.hpp"
 #include "timer.hpp"
 #include "level.hpp"
 #include "freeForAllLevel.hpp"

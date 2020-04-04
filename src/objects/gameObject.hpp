@@ -1,14 +1,12 @@
 #pragma once
 
 #include "manyakSDL.hpp"
-#include "action.hpp"
 
 class GameObject {
 
 public:
 	void render();
 	virtual void update(float delta) = 0;
-	virtual void input(Action action) = 0;
 	
 	virtual ~GameObject();
 protected:
