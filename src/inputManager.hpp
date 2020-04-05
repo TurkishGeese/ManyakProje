@@ -23,6 +23,7 @@ public:
 	// TODO there should be a higher level of abstraction on objects called an Object. The below function should be able to take UIObjects as well.
 	static InputState getInputState(GameObject* obj, SDL_Keycode key); // This function should only be called by objects
 	static InputState getInputState(InputKey key); // Temporary function until we move SDL_Keycodes to InputKey
+	static InputState getInputState(GameObject* obj, InputKey key);
 
 	static Vec2 getMouseLocation();
 	static bool ctrlDown();
@@ -39,6 +40,7 @@ private:
 	InputState internalGetInputState(SDL_Keycode key);
 	InputState internalGetInputState(GameObject* obj, SDL_Keycode key);
 	InputState internalGetInputState(InputKey key);
+	InputState internalGetInputState(GameObject* obj, InputKey key);
 	Vec2 internalGetMouseLocation();
 	bool internalCtrlDown();
 	bool internalAltDown();

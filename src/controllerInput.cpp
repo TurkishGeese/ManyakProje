@@ -17,34 +17,33 @@ InputState ControllerInput::getInputState(InputKey key) {
 }
 
 void ControllerInput::preUpdateInput() {
-	// If the key was pressed earlier, now it's being held.
-	// If the key was released earlier, now it has no state.
-	for (std::map<InputKey, InputState>::iterator it = mInputStates.begin(); it != mInputStates.end();)
-	{
-		// Need to get next now because we might delete the current iterator
-		auto curIt = it;
-		it++;
-
-		if (curIt->second == PRESSED) {
-			mInputStates[curIt->first] = HELD;
+	// XXX: I hate that I have to do this. For some reason game controller events are not being received. Instead of trying to receive them,
+	// since there is only a handful amount of buttons, we check each button instead. And instead of checking events we literally ask about
+	// every single button........ BAH
+	for (int button = CONTROLLER_A; button <= CONTROLLER_DPAD_RIGHT; button++) {
+		InputKey inputKey = static_cast<InputKey>(button);
+		if (SDL_GameControllerGetButton(mSdlController, (SDL_GameControllerButton)getControllerButtonFromInputKey(inputKey)) == 0) {
+			if (mInputStates[inputKey] == PRESSED || mInputStates[inputKey] == HELD) {
+				mInputStates[inputKey] = RELEASED;
+			}
+			else {
+				mInputStates[inputKey] = NONE;
+			}
 		}
-		else if (curIt->second == RELEASED) {
-			// XXX: Look at KeyboardInput
-			mInputStates.erase(curIt->first);
+		else {
+			if (mInputStates[inputKey] == PRESSED || mInputStates[inputKey] == HELD) {
+				mInputStates[inputKey] = HELD;
+			}
+			else {
+				mInputStates[inputKey] = PRESSED;
+			}
 		}
 	}
 }
 
 void ControllerInput::updateInput(SDL_Event& e) {
-	if (e.type == SDL_CONTROLLERAXISMOTION) {
-		// TODO Controller axis motion
-	}
-	else if (e.type == SDL_CONTROLLERBUTTONDOWN) {
-		mInputStates[getInputKeyFromControllerButton(e.cbutton.button)] = PRESSED;
-	}
-	else if (e.type == SDL_CONTROLLERBUTTONUP) {
-		mInputStates[getInputKeyFromControllerButton(e.cbutton.button)] = RELEASED;
-	}
+	(void)e;
+	// Note: Look at the comment in the above function
 }
 
 ControllerInput::~ControllerInput() {
