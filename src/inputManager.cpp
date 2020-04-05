@@ -58,22 +58,22 @@ bool InputManager::shiftDown() {
 
 InputManager::InputManager() {
     for (int i = 0; i < SDL_NumJoysticks(); ++i) {
-        if (SDL_IsGameController(i)) {
-            if (!mController1.isConnected()) {
-                mController1.connectToController(i);
-            }
-            else if (!mController2.isConnected()) {
-                mController2.connectToController(i);
-            }
-            else if (!mController3.isConnected()) {
-                mController3.connectToController(i);
-            }
-            else if (!mController4.isConnected()) {
-                mController4.connectToController(i);
-            }
-            else {
-                Logger::logError("More than 4 controllers are connected!");
-            }
+        if (!SDL_IsGameController(i)) continue;
+
+        if (!mController1.isConnected()) {
+            mController1.connectToController(i);
+        }
+        else if (!mController2.isConnected()) {
+            mController2.connectToController(i);
+        }
+        else if (!mController3.isConnected()) {
+            mController3.connectToController(i);
+        }
+        else if (!mController4.isConnected()) {
+            mController4.connectToController(i);
+        }
+        else {
+            Logger::logError("More than 4 controllers are connected!");
         }
     }
 
