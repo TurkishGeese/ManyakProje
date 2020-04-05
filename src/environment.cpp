@@ -105,8 +105,6 @@ bool Environment::start() {
 
     bool running = true;
 
-    SDL_Event e;
-
     Level* level = new FreeForAllLevel();
 
     long long lastModified = 0;

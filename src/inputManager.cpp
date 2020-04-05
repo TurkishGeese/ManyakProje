@@ -95,9 +95,9 @@ void InputManager::internalRegisterObject(GameObject* obj, InputType inputType) 
             mController1Used = true;
             mInputMapping[obj] = &mController1;
         }
-        else if (!mController3Used) {
-            mController3Used = true;
-            mInputMapping[obj] = &mController3;
+        else if (!mController2Used) {
+            mController2Used = true;
+            mInputMapping[obj] = &mController2;
         }
         else if (!mController3Used) {
             mController3Used = true;
