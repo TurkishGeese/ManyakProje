@@ -36,6 +36,10 @@ InputState InputManager::getInputState(InputKey key) {
     return sInstance->internalGetInputState(key);
 }
 
+InputState InputManager::getInputState(GameObject* obj, InputKey key) {
+    return sInstance->internalGetInputState(obj, key);
+}
+
 Vec2 InputManager::getMouseLocation() {
     return sInstance->internalGetMouseLocation();
 }
@@ -138,23 +142,8 @@ void InputManager::internalUpdateInput() {
         else if (e.type == SDL_CONTROLLERAXISMOTION ||
             e.type == SDL_CONTROLLERBUTTONDOWN ||
             e.type == SDL_CONTROLLERBUTTONUP) {
-            // NOTE: Technically if the event is an axis event we're supposed to access event as e.caxis. However, since e is just a union and the layout of
-            // e.caxis and e.cbutton is the same until the which field, we can just cast it like this and not worry about it.
-            if (e.cbutton.which == mController1.getControllerId()) {
-                mController1.updateInput(e);
-            }
-            else if (e.cbutton.which == mController2.getControllerId()) {
-                mController2.updateInput(e);
-            }
-            else if (e.cbutton.which == mController3.getControllerId()) {
-                mController3.updateInput(e);
-            }
-            else if (e.cbutton.which == mController4.getControllerId()) {
-                mController4.updateInput(e);
-            }
-            else {
-                Logger::logError("An event came from a controller that we don't look at?");
-            }
+            // Note: Look at ControllerInput.cpp::preUpdate() for more info.
+            Logger::logError("Should not have received a controller input event.");
         }
         else if (e.type == SDL_CONTROLLERDEVICEADDED ||
             e.type == SDL_CONTROLLERDEVICEREMOVED) {
@@ -175,6 +164,10 @@ InputState InputManager::internalGetInputState(GameObject* obj, SDL_Keycode key)
 
 InputState InputManager::internalGetInputState(InputKey key) {
     return mKeyboard.getInputState(key);
+}
+
+InputState InputManager::internalGetInputState(GameObject* obj, InputKey key) {
+    return mInputMapping[obj]->getInputState(key);
 }
 
 Vec2 InputManager::internalGetMouseLocation() {

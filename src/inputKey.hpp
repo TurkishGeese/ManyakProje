@@ -82,6 +82,42 @@ InputKey inline getInputKeyFromControllerButton(Uint8 controllerButton) {
     exit(1);
 }
 
+Uint8 inline getControllerButtonFromInputKey(InputKey inputKey) {
+    switch (inputKey) {
+    case CONTROLLER_A:
+        return SDL_CONTROLLER_BUTTON_A;
+    case CONTROLLER_B:
+        return SDL_CONTROLLER_BUTTON_B;
+    case CONTROLLER_X:
+        return SDL_CONTROLLER_BUTTON_X;
+    case CONTROLLER_Y:
+        return SDL_CONTROLLER_BUTTON_Y;
+    case CONTROLLER_BACK:
+        return SDL_CONTROLLER_BUTTON_BACK;
+    case CONTROLLER_GUIDE:
+        return SDL_CONTROLLER_BUTTON_GUIDE;
+    case CONTROLLER_START:
+        return SDL_CONTROLLER_BUTTON_START;
+    case CONTROLLER_LEFTSTICK:
+        return SDL_CONTROLLER_BUTTON_LEFTSTICK;
+    case CONTROLLER_RIGHTSTICK:
+        return SDL_CONTROLLER_BUTTON_RIGHTSTICK;
+    case CONTROLLER_LEFTSHOULDER:
+        return SDL_CONTROLLER_BUTTON_LEFTSHOULDER;
+    case CONTROLLER_RIGHTSHOULDER:
+        return SDL_CONTROLLER_BUTTON_RIGHTSHOULDER;
+    case CONTROLLER_DPAD_UP:
+        return SDL_CONTROLLER_BUTTON_DPAD_UP;
+    case CONTROLLER_DPAD_DOWN:
+        return SDL_CONTROLLER_BUTTON_DPAD_DOWN;
+    case CONTROLLER_DPAD_LEFT:
+        return SDL_CONTROLLER_BUTTON_DPAD_LEFT;
+    case CONTROLLER_DPAD_RIGHT:
+        return SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
+    }
+    exit(1);
+}
+
 InputKey inline getInputKeyFromControllerAxis(Uint8 controllerAxis) {
     switch (controllerAxis) {
         case SDL_CONTROLLER_AXIS_LEFTX:
