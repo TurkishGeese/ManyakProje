@@ -78,6 +78,8 @@ InputKey inline getInputKeyFromControllerButton(Uint8 controllerButton) {
             return CONTROLLER_DPAD_LEFT;
         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
             return CONTROLLER_DPAD_RIGHT;
+        default:
+            break;
     }
     exit(1);
 }
@@ -114,6 +116,8 @@ Uint8 inline getControllerButtonFromInputKey(InputKey inputKey) {
         return SDL_CONTROLLER_BUTTON_DPAD_LEFT;
     case CONTROLLER_DPAD_RIGHT:
         return SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
+        default:
+            break;
     }
     exit(1);
 }
@@ -132,6 +136,8 @@ InputKey inline getInputKeyFromControllerAxis(Uint8 controllerAxis) {
             return CONTROLLER_AXIS_TRIGGERLEFT;
         case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
             return CONTROLLER_AXIS_TRIGGERRIGHT;
+        default:
+            break;
     }
     exit(1);
 }
