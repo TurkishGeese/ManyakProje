@@ -159,7 +159,10 @@ InputState InputManager::internalGetInputState(SDL_Keycode key) {
 }
 
 InputState InputManager::internalGetInputState(GameObject* obj, SDL_Keycode key) {
-    return mInputMapping[obj]->getInputState(key);
+    auto mapEntry = mInputMapping.find(obj);
+    if (mapEntry == mInputMapping.end())
+        return NONE;
+    return mapEntry->second->getInputState(key);
 }
 
 InputState InputManager::internalGetInputState(InputKey key) {
@@ -167,7 +170,10 @@ InputState InputManager::internalGetInputState(InputKey key) {
 }
 
 InputState InputManager::internalGetInputState(GameObject* obj, InputKey key) {
-    return mInputMapping[obj]->getInputState(key);
+    auto mapEntry = mInputMapping.find(obj);
+    if (mapEntry == mInputMapping.end())
+        return NONE;
+    return mapEntry->second->getInputState(key);
 }
 
 Vec2 InputManager::internalGetMouseLocation() {

@@ -16,7 +16,7 @@
 #include "logger.hpp"
 #include "timer.hpp"
 #include "level.hpp"
-#include "freeForAllLevel.hpp"
+#include "introLevel.hpp"
 
 #if defined(MANYAK_WIN32)
     std::string resourceDirectory = "../../../../resources/";
@@ -30,6 +30,7 @@
 #endif
 
 TTF_Font* Environment::sFont = nullptr;
+Level* Environment::sChangeLevel = nullptr;
  
 Environment::~Environment() {
     InputManager::quit();
@@ -105,7 +106,7 @@ bool Environment::start() {
 
     bool running = true;
 
-    Level* level = new FreeForAllLevel();
+    Level* level = new IntroLevel();
 
     long long lastModified = 0;
     
@@ -123,6 +124,12 @@ bool Environment::start() {
         }
 
         level->update(delta);
+
+        if (sChangeLevel != nullptr) {
+            delete level;
+            level = sChangeLevel;
+            sChangeLevel = nullptr;
+        }
 
         SDL_RenderClear(mRenderer);
         level->render();

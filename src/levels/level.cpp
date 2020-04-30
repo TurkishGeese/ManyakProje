@@ -12,10 +12,15 @@ Level::~Level() {
     for (UIObject* obj : mUiObjects) {
         delete obj;
     }
-    InputManager::reset();
+}
+
+void Level::preUpdate() {
+
 }
 
 void Level::update(float delta) {
+    preUpdate();
+
     for (GameObject* obj : mGameObjects) {
         obj->update(delta);
     }

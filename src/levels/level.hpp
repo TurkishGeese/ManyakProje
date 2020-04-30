@@ -7,6 +7,7 @@
 class Level {
 
 public:
+	void virtual preUpdate();
 	void update(float delta);
 	void render();
 
