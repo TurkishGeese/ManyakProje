@@ -13,7 +13,7 @@ IntroLevel::IntroLevel() {
 }
 
 void IntroLevel::preUpdate() {
-    if (InputManager::getInputState(SDLK_RETURN) == PRESSED) {
+    if (InputManager::getActionState(Action::SELECT) == InputState::PRESSED) {
         InputManager::reset();
         Environment::sChangeLevel = new FreeForAllLevel();
     }

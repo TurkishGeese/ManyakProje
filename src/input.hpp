@@ -4,10 +4,10 @@
 
 #include "inputState.hpp"
 #include "inputKey.hpp"
+#include "action.hpp"
 
 class Input {
 public:
-	virtual InputState getInputState(SDL_Keycode key) = 0;
 	virtual InputState getInputState(InputKey key) = 0;
 	virtual void updateInput(SDL_Event& e) = 0;
 

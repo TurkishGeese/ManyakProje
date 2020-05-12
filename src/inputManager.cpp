@@ -1,6 +1,9 @@
 #include "inputManager.hpp"
 
 #include "logger.hpp"
+#include "playerConfiguration.hpp"
+
+#include <assert.h>
 
 InputManager* InputManager::sInstance = nullptr;
 
@@ -16,28 +19,20 @@ void InputManager::reset() {
     sInstance->internalReset();
 }
 
-void InputManager::registerObject(GameObject* obj, InputType inputType) {
-    sInstance->internalRegisterObject(obj, inputType);
+void InputManager::registerObject(GameObject* obj, InputType inputType, InputConfiguration config) {
+    sInstance->internalRegisterObject(obj, inputType, config);
 }
 
 void InputManager::updateInput() {
     sInstance->internalUpdateInput();
 }
 
-InputState InputManager::getInputState(SDL_Keycode key) {
-    return sInstance->internalGetInputState(key);
+InputState InputManager::getActionState(Action action) {
+    return sInstance->internalGetActionState(action);
 }
 
-InputState InputManager::getInputState(GameObject* obj, SDL_Keycode key) {
-    return sInstance->internalGetInputState(obj, key);
-}
-
-InputState InputManager::getInputState(InputKey key) {
-    return sInstance->internalGetInputState(key);
-}
-
-InputState InputManager::getInputState(GameObject* obj, InputKey key) {
-    return sInstance->internalGetInputState(obj, key);
+InputState InputManager::getActionState(GameObject* obj, Action action) {
+    return sInstance->internalGetActionState(obj, action);
 }
 
 Vec2 InputManager::getMouseLocation() {
@@ -83,14 +78,15 @@ void InputManager::internalReset() {
     mInputMapping.clear();
 }
 
-void InputManager::internalRegisterObject(GameObject* obj, InputType inputType) {
-    if (inputType == KEYBOARD) {
+void InputManager::internalRegisterObject(GameObject* obj, InputType inputType, InputConfiguration config) {
+    mInputConfigurations[obj] = config;
+    if (inputType == InputType::KEYBOARD) {
         mInputMapping[obj] = &mKeyboard;
     }
-    else if (inputType == AI_PLAYER) {
+    else if (inputType == InputType::AI_PLAYER) {
         mInputMapping[obj] = &mAiInput;
     }
-    else if (inputType == CONTROLLER) {
+    else if (inputType == InputType::CONTROLLER) {
         if (!mController1Used) {
             mController1Used = true;
             mInputMapping[obj] = &mController1;
@@ -154,26 +150,18 @@ void InputManager::internalUpdateInput() {
     mAiInput.updateInput(e); // e is ignored
 }
 
-InputState InputManager::internalGetInputState(SDL_Keycode key) {
-    return mKeyboard.getInputState(key);
+InputState InputManager::internalGetActionState(Action action) {
+    return mKeyboard.getInputState(mDefaultConfig.getInputKey(action));
 }
 
-InputState InputManager::internalGetInputState(GameObject* obj, SDL_Keycode key) {
+InputState InputManager::internalGetActionState(GameObject* obj, Action action) {
+    auto configEntry = mInputConfigurations.find(obj);
+    assert(configEntry != mInputConfigurations.end() && "Couldn't find configuration of the object");
+
     auto mapEntry = mInputMapping.find(obj);
-    if (mapEntry == mInputMapping.end())
-        return NONE;
-    return mapEntry->second->getInputState(key);
-}
+    assert(mapEntry != mInputMapping.end() && "Couldn't find configuration of the object");
 
-InputState InputManager::internalGetInputState(InputKey key) {
-    return mKeyboard.getInputState(key);
-}
-
-InputState InputManager::internalGetInputState(GameObject* obj, InputKey key) {
-    auto mapEntry = mInputMapping.find(obj);
-    if (mapEntry == mInputMapping.end())
-        return NONE;
-    return mapEntry->second->getInputState(key);
+    return mapEntry->second->getInputState(configEntry->second.getInputKey(action));
 }
 
 Vec2 InputManager::internalGetMouseLocation() {

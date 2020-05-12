@@ -2,15 +2,10 @@
 
 #include "logger.hpp"
 
-InputState ControllerInput::getInputState(SDL_Keycode key) {
-	// TODO Move SDL_Keycode s to InputKey
-	return NONE;
-}
-
 InputState ControllerInput::getInputState(InputKey key) {
 	auto iterator = mInputStates.find(key);
 	if (iterator == mInputStates.end()) {
-		return NONE;
+		return InputState::NONE;
 	}
 
 	return iterator->second;
@@ -23,19 +18,19 @@ void ControllerInput::preUpdateInput() {
 	for (int button = CONTROLLER_A; button <= CONTROLLER_DPAD_RIGHT; button++) {
 		InputKey inputKey = static_cast<InputKey>(button);
 		if (SDL_GameControllerGetButton(mSdlController, (SDL_GameControllerButton)getControllerButtonFromInputKey(inputKey)) == 0) {
-			if (mInputStates[inputKey] == PRESSED || mInputStates[inputKey] == HELD) {
-				mInputStates[inputKey] = RELEASED;
+			if (mInputStates[inputKey] == InputState::PRESSED || mInputStates[inputKey] == InputState::HELD) {
+				mInputStates[inputKey] = InputState::RELEASED;
 			}
 			else {
-				mInputStates[inputKey] = NONE;
+				mInputStates[inputKey] = InputState::NONE;
 			}
 		}
 		else {
-			if (mInputStates[inputKey] == PRESSED || mInputStates[inputKey] == HELD) {
-				mInputStates[inputKey] = HELD;
+			if (mInputStates[inputKey] == InputState::PRESSED || mInputStates[inputKey] == InputState::HELD) {
+				mInputStates[inputKey] = InputState::HELD;
 			}
 			else {
-				mInputStates[inputKey] = PRESSED;
+				mInputStates[inputKey] = InputState::PRESSED;
 			}
 		}
 	}

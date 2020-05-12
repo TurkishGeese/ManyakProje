@@ -1,11 +1,11 @@
 #pragma once
 
 #include "input.hpp"
+#include "inputConfiguration.hpp"
 #include <map>
 
 class ControllerInput : public Input {
 public:
-	InputState getInputState(SDL_Keycode key) override;
 	InputState getInputState(InputKey key) override;
 	void updateInput(SDL_Event& e) override;
 

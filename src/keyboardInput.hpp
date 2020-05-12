@@ -7,7 +7,6 @@
 class KeyboardInput : public Input {
 
 public:
-	InputState getInputState(SDL_Keycode key) override;
 	InputState getInputState(InputKey key) override;
 	void updateInput(SDL_Event& e) override;
 
@@ -20,9 +19,7 @@ public:
 	~KeyboardInput();
 private:
 
-	// TODO We should move all key inputs to InputKey as well
-	std::map<SDL_Keycode, InputState> mInputStates = std::map<SDL_Keycode, InputState>();
-	std::map<InputKey, InputState> mMouseStates = std::map<InputKey, InputState>();
+	std::map<InputKey, InputState> mInputStates = std::map<InputKey, InputState>();
 	Vec2 mMouseLoc;
 	SDL_Keymod mModState;
 };

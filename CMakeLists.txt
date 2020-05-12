@@ -21,7 +21,8 @@ if(WIN32)
                         src/levels
                         src/objects
                         src/objects/gameObjects
-                        src/objects/uiObjects)
+                        src/objects/uiObjects
+                        src/inputConfigurations)
 
     add_definitions(-DMANYAK_WIN32)
     add_definitions(-DRUNNING_MANYAK_GAME="./temp_manyakGame.dll")
@@ -30,7 +31,8 @@ else()
                         src/levels
                         src/objects
                         src/objects/gameObjects
-                        src/objects/uiObjects)
+                        src/objects/uiObjects
+                        src/inputConfigurations)
     add_definitions(-DMANYAK_MAC)
     add_definitions(-DRUNNING_MANYAK_GAME="./temp_manyakGame")
 endif()

@@ -20,28 +20,20 @@ Player::Player() {
     mTexture = Renderer::loadTextureFromPath(resourceDirectory2 + "Idle.png");
 }
 
-bool pressedOrHeld(InputState state) {
-	return state == HELD || state == PRESSED;
-}
-
 void Player::update(float delta) {
-	if (pressedOrHeld(InputManager::getInputState(this, SDLK_UP)) ||
-		pressedOrHeld(InputManager::getInputState(this, CONTROLLER_DPAD_UP))) {
+	if (InputManager::getActionState(this, Action::WALK_UP) & (InputState::PRESSED | InputState::HELD)) {
 		mPosY -= 500.0f * delta;
 	}
 
-	if (pressedOrHeld(InputManager::getInputState(this, SDLK_DOWN)) ||
-		pressedOrHeld(InputManager::getInputState(this, CONTROLLER_DPAD_DOWN))) {
+	if (InputManager::getActionState(this, Action::WALK_DOWN) & (InputState::PRESSED | InputState::HELD)) {
 		mPosY += 500.0f * delta;
 	}
 
-	if (pressedOrHeld(InputManager::getInputState(this, SDLK_LEFT)) ||
-		pressedOrHeld(InputManager::getInputState(this, CONTROLLER_DPAD_LEFT))) {
+	if (InputManager::getActionState(this, Action::WALK_LEFT) & (InputState::PRESSED | InputState::HELD)) {
 		mPosX -= 500.0f * delta;
 	}
 
-	if (pressedOrHeld(InputManager::getInputState(this, SDLK_RIGHT)) ||
-		pressedOrHeld(InputManager::getInputState(this, CONTROLLER_DPAD_RIGHT))) {
+	if (InputManager::getActionState(this, Action::WALK_RIGHT) & (InputState::PRESSED | InputState::HELD)) {
 		mPosX += 500.0f * delta;
 	}
 

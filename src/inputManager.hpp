@@ -9,6 +9,9 @@
 #include "aiInput.hpp"
 #include "controllerInput.hpp"
 #include "gameObject.hpp"
+#include "action.hpp"
+#include "inputConfiguration.hpp"
+#include "defaultConfiguration.hpp"
 
 class InputManager {
 
@@ -17,13 +20,10 @@ public:
 	static void quit();
 	static void reset();
 
-	static void registerObject(GameObject* obj, InputType inputType);
+	static void registerObject(GameObject* obj, InputType inputType, InputConfiguration config);
 	static void updateInput();
-	static InputState getInputState(SDL_Keycode key); // This function should only be called by the level
-	// TODO there should be a higher level of abstraction on objects called an Object. The below function should be able to take UIObjects as well.
-	static InputState getInputState(GameObject* obj, SDL_Keycode key); // This function should only be called by objects
-	static InputState getInputState(InputKey key); // Temporary function until we move SDL_Keycodes to InputKey
-	static InputState getInputState(GameObject* obj, InputKey key);
+	static InputState getActionState(Action action);
+	static InputState getActionState(GameObject* obj, Action action);
 
 	static Vec2 getMouseLocation();
 	static bool ctrlDown();
@@ -35,12 +35,10 @@ private:
 
 	void internalReset();
 
-	void internalRegisterObject(GameObject* obj, InputType inputType);
+	void internalRegisterObject(GameObject* obj, InputType inputType, InputConfiguration config);
 	void internalUpdateInput();
-	InputState internalGetInputState(SDL_Keycode key);
-	InputState internalGetInputState(GameObject* obj, SDL_Keycode key);
-	InputState internalGetInputState(InputKey key);
-	InputState internalGetInputState(GameObject* obj, InputKey key);
+	InputState internalGetActionState(Action action);
+	InputState internalGetActionState(GameObject* obj, Action action);
 	Vec2 internalGetMouseLocation();
 	bool internalCtrlDown();
 	bool internalAltDown();
@@ -55,6 +53,8 @@ private:
 	ControllerInput mController4;
 	AIInput mAiInput;
 	std::map<GameObject*, Input*> mInputMapping = std::map<GameObject*, Input*>();
+	std::map<GameObject*, InputConfiguration> mInputConfigurations = std::map<GameObject*, InputConfiguration>();
+	InputConfiguration mDefaultConfig = DefaultConfiguration();
 	bool mController1Used = false;
 	bool mController2Used = false;
 	bool mController3Used = false;

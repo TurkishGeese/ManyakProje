@@ -1,15 +1,9 @@
 #include "aiInput.hpp"
 
-InputState AIInput::getInputState(SDL_Keycode key) {
-	// TODO Implement an AI
-	(void)key;
-	return NONE;
-}
-
 InputState AIInput::getInputState(InputKey key) {
 	// TODO Implement an AI
 	(void)key;
-	return NONE;
+	return InputState::NONE;
 }
 
 void AIInput::updateInput(SDL_Event& e) {
