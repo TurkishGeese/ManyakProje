@@ -12,6 +12,10 @@ Level::~Level() {
     for (UIObject* obj : mUiObjects) {
         delete obj;
     }
+
+    for (InputConfiguration* config : mConfigurations) {
+        delete config;
+    }
 }
 
 void Level::preUpdate() {

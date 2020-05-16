@@ -20,7 +20,7 @@ public:
 	static void quit();
 	static void reset();
 
-	static void registerObject(GameObject* obj, InputType inputType, InputConfiguration config);
+	static void registerObject(GameObject* obj, InputType inputType, InputConfiguration* config);
 	static void updateInput();
 	static InputState getActionState(Action action);
 	static InputState getActionState(GameObject* obj, Action action);
@@ -35,7 +35,7 @@ private:
 
 	void internalReset();
 
-	void internalRegisterObject(GameObject* obj, InputType inputType, InputConfiguration config);
+	void internalRegisterObject(GameObject* obj, InputType inputType, InputConfiguration* config);
 	void internalUpdateInput();
 	InputState internalGetActionState(Action action);
 	InputState internalGetActionState(GameObject* obj, Action action);
@@ -53,7 +53,7 @@ private:
 	ControllerInput mController4;
 	AIInput mAiInput;
 	std::map<GameObject*, Input*> mInputMapping = std::map<GameObject*, Input*>();
-	std::map<GameObject*, InputConfiguration> mInputConfigurations = std::map<GameObject*, InputConfiguration>();
+	std::map<GameObject*, InputConfiguration*> mInputConfigurations = std::map<GameObject*, InputConfiguration*>();
 	InputConfiguration mDefaultConfig = DefaultConfiguration();
 	bool mController1Used = false;
 	bool mController2Used = false;

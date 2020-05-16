@@ -19,7 +19,7 @@ void InputManager::reset() {
     sInstance->internalReset();
 }
 
-void InputManager::registerObject(GameObject* obj, InputType inputType, InputConfiguration config) {
+void InputManager::registerObject(GameObject* obj, InputType inputType, InputConfiguration* config) {
     sInstance->internalRegisterObject(obj, inputType, config);
 }
 
@@ -78,7 +78,7 @@ void InputManager::internalReset() {
     mInputMapping.clear();
 }
 
-void InputManager::internalRegisterObject(GameObject* obj, InputType inputType, InputConfiguration config) {
+void InputManager::internalRegisterObject(GameObject* obj, InputType inputType, InputConfiguration* config) {
     mInputConfigurations[obj] = config;
     if (inputType == InputType::KEYBOARD) {
         mInputMapping[obj] = &mKeyboard;
@@ -161,7 +161,7 @@ InputState InputManager::internalGetActionState(GameObject* obj, Action action) 
     auto mapEntry = mInputMapping.find(obj);
     assert(mapEntry != mInputMapping.end() && "Couldn't find configuration of the object");
 
-    return mapEntry->second->getInputState(configEntry->second.getInputKey(action));
+    return mapEntry->second->getInputState(configEntry->second->getInputKey(action));
 }
 
 Vec2 InputManager::internalGetMouseLocation() {

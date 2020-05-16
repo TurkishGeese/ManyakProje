@@ -21,6 +21,7 @@ Player::Player() {
 }
 
 void Player::update(float delta) {
+	mDelta = delta;
 	if (InputManager::getActionState(this, Action::WALK_UP) & (InputState::PRESSED | InputState::HELD)) {
 		mPosY -= 500.0f * delta;
 	}
@@ -37,5 +38,14 @@ void Player::update(float delta) {
 		mPosX += 500.0f * delta;
 	}
 
+
+	if (mPosX < 0.0f) mPosX = 0.0f;
+	if (mPosY < 0.0f) mPosY = 0.0f;
+	if (mPosX > 540.0f) mPosX = 540.0f;
+	if (mPosY > 430.0f) mPosY = 430.0f;
     mRenderBox = { (int)mPosX, (int)mPosY, 320, 240 };
+}
+
+float Player::getLastDelta() {
+	return mDelta;
 }

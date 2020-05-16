@@ -116,7 +116,9 @@ enum InputKey {
 	KEY_F9,
 	KEY_F10,
 	KEY_F11,
-	KEY_F12
+	KEY_F12,
+
+	KEY_LAST
 };
 
 // TODO there must be a smarter way of doing this.

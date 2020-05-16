@@ -3,6 +3,7 @@
 #include <vector>
 #include "gameObject.hpp"
 #include "uiObject.hpp"
+#include "inputConfiguration.hpp"
 
 class Level {
 
@@ -15,5 +16,5 @@ public:
 protected:
 	std::vector<GameObject*> mGameObjects;
 	std::vector<UIObject*> mUiObjects;
-
+	std::vector<InputConfiguration*> mConfigurations;
 };
