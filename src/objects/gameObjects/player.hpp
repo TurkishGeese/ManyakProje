@@ -10,7 +10,5 @@ public:
 
     float getLastDelta();
 private:
-    float mPosX;
-    float mPosY;
     float mDelta;
 };

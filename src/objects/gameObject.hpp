@@ -1,6 +1,8 @@
 #pragma once
 
 #include "manyakSDL.hpp"
+#include "texture.hpp"
+#include "vec2.hpp"
 
 class GameObject {
 
@@ -11,8 +13,6 @@ public:
 	virtual ~GameObject();
 protected:
 
-	SDL_Texture* mTexture;
-	SDL_Rect mRenderBox;
-	SDL_Rect mSpriteClip;
-	bool isClipped;
+	Texture* mTexture;
+	Vec2 mPosition;
 };

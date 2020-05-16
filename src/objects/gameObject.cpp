@@ -2,13 +2,9 @@
 #include "renderer.hpp"
 
 void GameObject::render() {
-	if (isClipped)
-		Renderer::render(mTexture, &mRenderBox, &mSpriteClip);
-	else 
-		Renderer::render(mTexture, &mRenderBox);
+	mTexture->render(mPosition);
 }
 
 GameObject::~GameObject() {
-    if (mTexture != nullptr)
-        SDL_DestroyTexture(mTexture);
+	delete mTexture;
 }

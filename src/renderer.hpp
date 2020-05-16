@@ -2,18 +2,21 @@
 
 #include "manyakSDL.hpp"
 #include "manyakSDLttf.hpp"
+#include "vec2.hpp"
 #include <string>
 
 class Renderer {
 
 public:
+	static std::string RESOURCE_DIR;
+
 	static void initialize(SDL_Renderer* sdlRenderer);
 	static void quit();
 
 	// If the rendered texture doesn't need to be clipped then clip is nullptr
 	static void render(SDL_Texture* texture, SDL_Rect* pos, SDL_Rect* clip = nullptr);
 	static SDL_Texture* textureFromSurface(SDL_Surface* surface);
-	static SDL_Texture* loadTextureFromPath(std::string path);
+	static SDL_Texture* loadTextureFromPath(std::string path, Vec2& size);
 
 	static Renderer* sInstance;
 private:
@@ -24,5 +27,5 @@ private:
 
 	void internalRender(SDL_Texture* texture, SDL_Rect* pos, SDL_Rect* clip);
 	SDL_Texture* internalTextureFromSurface(SDL_Surface* surface);
-	SDL_Texture* internalLoadTextureFromPath(std::string path);
+	SDL_Texture* internalLoadTextureFromPath(std::string path, Vec2& size);
 };

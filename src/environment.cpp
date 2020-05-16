@@ -18,12 +18,6 @@
 #include "level.hpp"
 #include "introLevel.hpp"
 
-#if defined(MANYAK_WIN32)
-    std::string resourceDirectory = "../../../../resources/";
-#else
-    std::string resourceDirectory = "../resources/";
-#endif
-
 #ifndef MANYAK_GAME
 #define MANYAK_GAME 
     // TODO Get rid of this ifndef when we fix TODO #6
@@ -57,7 +51,7 @@ void Environment::initialize() {
         return;
     }
 
-    sFont = TTF_OpenFont((resourceDirectory + "KenneyBold.ttf").c_str(), 28);
+    sFont = TTF_OpenFont((Renderer::RESOURCE_DIR + "KenneyBold.ttf").c_str(), 28);
     if (sFont == nullptr) {
         Logger::logSdlTtfError("Could not initialize the font!");
         return;
