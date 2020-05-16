@@ -18,8 +18,6 @@ public:
     
     void initialize();
     bool start();
-    void loadText(std::string text);
-    void loadTexture(std::string path);
 
     static TTF_Font* sFont;
     static Level* sChangeLevel;
