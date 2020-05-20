@@ -6,8 +6,6 @@
 #include "freeForAllLevel.hpp"
 
 UIButton::UIButton(std::string idlePath, std::string activePath, float x, float y, float width, float height) {
-	mDelta = 0.0f; // TODO this is needed for the AI. We should find a better way to propagate delta
-					// to the AI.
 	mPosition.x = x;
 	mPosition.y = y;
 	buttonWidth = width;
@@ -28,8 +26,9 @@ void UIButton::render(){
 	}
 }
 
-void UIButton::update(float delta){
-	mDelta = delta;
+void UIButton::update(){
+	//Add changing cursor functionality when hover over button
+
 	if(InputManager::getActionState(Action::LMB) & InputState::PRESSED) {
 		if(isButtonClicked()){
 			isClicked = true;

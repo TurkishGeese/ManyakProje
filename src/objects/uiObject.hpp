@@ -9,13 +9,13 @@ class UIObject {
 public:
 	// TODO Just by logic, UIObjects will have children. This object should have children and should render them as well.
 	virtual void render();
-	virtual void update(float delta);
+	virtual void update();
 
 	virtual ~UIObject();
 protected:
 
-	Texture* mTexture;
+	Texture* mTexture = nullptr;
 	Vec2 mPosition;
-	SDL_Texture* mSDL_Texture;
+	SDL_Texture* mSDL_Texture = nullptr;
 	SDL_Rect mRenderBox;
 };

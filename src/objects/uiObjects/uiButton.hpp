@@ -11,13 +11,12 @@ public:
     UIButton(std::string idlePath, std::string activePath, float x, float y, float width, float height);
 
     void render() override;
-    void update(float delta) override;
+    void update() override;
     bool isButtonClicked();
 
 private:
 
     Texture* mTextureActive;
-    float mDelta;
     bool isClicked = false; 
     float buttonWidth;
     float buttonHeight;

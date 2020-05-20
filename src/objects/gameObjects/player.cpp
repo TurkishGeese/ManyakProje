@@ -10,7 +10,7 @@ Player::Player() {
 	mPosition.y = 0.0f;
 
 	Vec2 renderSize{ 80.0f, 100.0f };
-	SDL_Rect spriteClip = { 50, 30, 80, 100};
+	SDL_Rect spriteClip = { 50, 30, 80, 100 };
 	mTexture = new Texture("Idle.png", renderSize, spriteClip);
 }
 

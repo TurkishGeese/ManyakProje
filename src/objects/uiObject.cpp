@@ -13,4 +13,4 @@ void UIObject::render() {
 	Renderer::render(mSDL_Texture, &mRenderBox);
 }
 
-void UIObject::update(float delta){}
+void UIObject::update(){}

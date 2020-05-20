@@ -30,7 +30,7 @@ void Level::update(float delta) {
     }
 
     for (UIObject* obj : mUiObjects) {
-        obj->update(delta);
+        obj->update();
     }
 }
 
