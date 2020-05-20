@@ -13,6 +13,7 @@ public:
 	~Texture();
 
 	void render(Vec2 position);
+
 private:
 	SDL_Rect mClip;
 	Vec2 mRenderSize;

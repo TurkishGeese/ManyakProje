@@ -9,7 +9,6 @@
 #define MOVEMENT_CAP 5.0f
 
 bool reset(float number) {
-	float orig = number;
 	if (number < 0.0f) number = number * -1;
 	static const float factor = 1000.0f / MOVEMENT_CAP;
 	int threshold = int(number * factor);

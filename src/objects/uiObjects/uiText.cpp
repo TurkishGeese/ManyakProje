@@ -13,6 +13,6 @@ UIText::UIText(std::string text, int x, int y, SDL_Color color){
         return;
     }
     mRenderBox = { x, y, textSurface->w, textSurface->h};
-    mTexture = Renderer::textureFromSurface(textSurface);
+    mSDL_Texture = Renderer::textureFromSurface(textSurface);
     SDL_FreeSurface(textSurface);
 }

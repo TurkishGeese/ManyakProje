@@ -12,7 +12,7 @@ public:
 	void update(float delta);
 	void render();
 
-	~Level();
+	virtual ~Level();
 protected:
 	std::vector<GameObject*> mGameObjects;
 	std::vector<UIObject*> mUiObjects;

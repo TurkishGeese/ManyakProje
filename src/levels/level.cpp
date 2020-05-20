@@ -28,6 +28,10 @@ void Level::update(float delta) {
     for (GameObject* obj : mGameObjects) {
         obj->update(delta);
     }
+
+    for (UIObject* obj : mUiObjects) {
+        obj->update(delta);
+    }
 }
 
 void Level::render() {
