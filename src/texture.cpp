@@ -3,7 +3,6 @@
 #include "renderer.hpp"
 
 Texture::Texture(std::string path, Vec2 size) {
-	isClipped = true;
 	mTexture = Renderer::loadTextureFromPath(path, mTextureSize);
 	mRenderSize = size;
 }
@@ -15,10 +14,16 @@ Texture::Texture(std::string path, Vec2 size, SDL_Rect clip) {
 	mClip = clip;
 }
 
+Texture::Texture(SDL_Surface *textSurface, Vec2 size){
+	mTexture = Renderer::textureFromSurface(textSurface);
+	mRenderSize = size;
+}
+
 Texture::~Texture() {
 	if (mTexture != nullptr)
 		SDL_DestroyTexture(mTexture);
 }
+
 
 void Texture::render(Vec2 position) {
 	if (isClipped) {
@@ -30,3 +35,4 @@ void Texture::render(Vec2 position) {
 		Renderer::render(mTexture, &renderPos);
 	}
 }
+

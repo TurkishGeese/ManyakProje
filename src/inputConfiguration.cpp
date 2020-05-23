@@ -10,3 +10,5 @@ InputKey InputConfiguration::getInputKey(Action action) {
 	
 	return entry->second;
 }
+
+InputConfiguration::~InputConfiguration() {};

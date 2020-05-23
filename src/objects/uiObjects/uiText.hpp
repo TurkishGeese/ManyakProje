@@ -8,5 +8,8 @@ class UIText : public UIObject {
 
 public:
     // TODO currently x and y are the position of the top left. Check TODO.md#8
-    UIText(std::string text, int x, int y, SDL_Color color);
+    // Add size parameter later (Vec2 size)
+    UIText(std::string text, Vec2 position, SDL_Color color);
+    void setPosition(Vec2 newPosition);
+    Vec2 getSize();
 };

@@ -1,16 +1,20 @@
 #pragma once
 
 #include "manyakSDL.hpp"
+#include "texture.hpp"
+#include "vec2.hpp"
 
 class UIObject {
 
 public:
 	// TODO Just by logic, UIObjects will have children. This object should have children and should render them as well.
-	void render();
+	virtual void render();
+	virtual void update();
 
 	virtual ~UIObject();
 protected:
 
-	SDL_Texture* mTexture;
-	SDL_Rect mRenderBox;
+	Texture* mTexture;
+	Vec2 mPosition;
+	Vec2 mRenderSize;
 };

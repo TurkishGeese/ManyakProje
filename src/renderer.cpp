@@ -35,9 +35,9 @@ Renderer::Renderer(SDL_Renderer* sdlRenderer) {
 }
 
 void Renderer::internalRender(SDL_Texture* texture, SDL_Rect* pos, SDL_Rect* clip) {
-    SDL_SetRenderDrawColor(mSdlRenderer, 0xFF, 0x00, 0x00, 0xFF);
-    SDL_RenderDrawRect(mSdlRenderer, pos);
-    SDL_SetRenderDrawColor(mSdlRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    //SDL_SetRenderDrawColor(mSdlRenderer, 0xFF, 0x00, 0x00, 0xFF);
+    //SDL_RenderDrawRect(mSdlRenderer, pos);
+    //SDL_SetRenderDrawColor(mSdlRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderCopy(mSdlRenderer, texture, clip, pos);
 }
 
