@@ -6,7 +6,7 @@
 #include "freeForAllLevel.hpp"
 
 UIButton::UIButton(void (*func)(), std::string text, Vec2 position, Vec2 size) {
-	function = func;
+	mFunction = func;
 	mPosition = position;
 	mRenderSize = size;
 
@@ -15,6 +15,10 @@ UIButton::UIButton(void (*func)(), std::string text, Vec2 position, Vec2 size) {
 	mText = new UIText(text, {0, 0}, { 0, 0, 0 });
 	textPosition = calculateTextPosition();
 	mText->setPosition(textPosition);
+}
+
+UIButton::~UIButton(){
+	delete mTextureActive;
 }
 
 void UIButton::render(){
@@ -27,7 +31,7 @@ void UIButton::render(){
 }
 
 void UIButton::update(){
-	//Add changing cursor functionality when hover over button
+	// Add changing cursor functionality when hover over button
 
 	if(InputManager::getActionState(Action::LMB) & InputState::PRESSED) {
 		if(isButtonClicked()){
@@ -37,12 +41,13 @@ void UIButton::update(){
 
 	if((InputManager::getActionState(Action::LMB) & InputState::RELEASED) && isClicked == true){
 		if(isButtonClicked()){
-			function();
+			mFunction();
 		}
 		isClicked = false;
 	}
 }
 
+// This function calculates the optimal position for the text using text's size, button's size and position
 Vec2 UIButton::calculateTextPosition(){
 	Vec2 textSize = mText->getSize();
 	return {mPosition.x + (mRenderSize.x - textSize.x) / 2, mPosition.y + (mRenderSize.y - textSize.y) / 2};
@@ -56,3 +61,4 @@ bool UIButton::isButtonClicked(){
 	}
 	return false;
 }
+

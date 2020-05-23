@@ -8,10 +8,10 @@
 #include "uiButton.hpp"
 
 
-//We defined this function in IntroLevel as a method but then got and error related to function passing
+//We defined this function in IntroLevel as a method but then got an error related to function passing
 void startFunc(){
     InputManager::reset();
-	Environment::sChangeLevel = new FreeForAllLevel();
+    Environment::sChangeLevel = new FreeForAllLevel();
 }
 
 IntroLevel::IntroLevel() {
