@@ -5,15 +5,18 @@
 #include "environment.hpp"
 #include "freeForAllLevel.hpp"
 
+std::string UIButton::sIdlePath = "buttonIdle.png";
+std::string UIButton::sActivePath = "buttonActive.png";
+
 UIButton::UIButton(void (*func)(), std::string text, Vec2 position, Vec2 size) {
 	mFunction = func;
 	mPosition = position;
 	mRenderSize = size;
 
-	mTexture = new Texture(idlePath, mRenderSize);
-	mTextureActive = new Texture(activePath, mRenderSize);
+	mTexture = new Texture(sIdlePath, mRenderSize);
+	mTextureActive = new Texture(sActivePath, mRenderSize);
 	mText = new UIText(text, {0, 0}, { 0, 0, 0 });
-	textPosition = calculateTextPosition();
+	Vec2 textPosition = calculateTextPosition();
 	mText->setPosition(textPosition);
 }
 
@@ -47,7 +50,8 @@ void UIButton::update(){
 	}
 }
 
-// This function calculates the optimal position for the text using text's size, button's size and position
+// First subtract button size from text size, then divide it into to half to calculate the optimal gap between text border and button border.
+// Lastly, add the result into border position.
 Vec2 UIButton::calculateTextPosition(){
 	Vec2 textSize = mText->getSize();
 	return {mPosition.x + (mRenderSize.x - textSize.x) / 2, mPosition.y + (mRenderSize.y - textSize.y) / 2};
