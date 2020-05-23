@@ -14,8 +14,7 @@ public:
 	virtual ~UIObject();
 protected:
 
-	Texture* mTexture = nullptr;
+	Texture* mTexture;
 	Vec2 mPosition;
-	SDL_Texture* mSDL_Texture = nullptr;
-	SDL_Rect mRenderBox;
+	Vec2 mRenderSize;
 };

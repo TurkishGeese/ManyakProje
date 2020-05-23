@@ -5,17 +5,16 @@
 #include "environment.hpp"
 #include "freeForAllLevel.hpp"
 
-UIButton::UIButton(std::string idlePath, std::string activePath, float x, float y, float width, float height) {
-	mPosition.x = x;
-	mPosition.y = y;
-	buttonWidth = width;
-	buttonHeight = height;
-	
+UIButton::UIButton(void (*func)(), std::string text, Vec2 position, Vec2 size) {
+	function = func;
+	mPosition = position;
+	mRenderSize = size;
 
-	Vec2 renderSize{width, height};
-	mTexture = new Texture(idlePath, renderSize);
-	mTextureActive = new Texture(activePath, renderSize);
-
+	mTexture = new Texture(idlePath, mRenderSize);
+	mTextureActive = new Texture(activePath, mRenderSize);
+	mText = new UIText(text, {0, 0}, { 0, 0, 0 });
+	textPosition = calculateTextPosition();
+	mText->setPosition(textPosition);
 }
 
 void UIButton::render(){
@@ -24,6 +23,7 @@ void UIButton::render(){
 	} else {
 		mTexture->render(mPosition);
 	}
+	mText->render();
 }
 
 void UIButton::update(){
@@ -37,17 +37,21 @@ void UIButton::update(){
 
 	if((InputManager::getActionState(Action::LMB) & InputState::RELEASED) && isClicked == true){
 		if(isButtonClicked()){
-			InputManager::reset();
-			Environment::sChangeLevel = new FreeForAllLevel(); //Bad design put this somewhere else later
+			function();
 		}
 		isClicked = false;
 	}
 }
 
+Vec2 UIButton::calculateTextPosition(){
+	Vec2 textSize = mText->getSize();
+	return {mPosition.x + (mRenderSize.x - textSize.x) / 2, mPosition.y + (mRenderSize.y - textSize.y) / 2};
+}
+
 bool UIButton::isButtonClicked(){
 	Vec2 mouseLocation = InputManager::getMouseLocation();
-	if((mouseLocation.x >= mPosition.x && mouseLocation.x <= mPosition.x + buttonWidth) &&
-	   (mouseLocation.y >= mPosition.y && mouseLocation.y <= mPosition.y + buttonHeight)){
+	if((mouseLocation.x >= mPosition.x && mouseLocation.x <= mPosition.x + mRenderSize.x) &&
+	   (mouseLocation.y >= mPosition.y && mouseLocation.y <= mPosition.y + mRenderSize.y)){
 		   return true;
 	}
 	return false;

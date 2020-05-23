@@ -18,7 +18,7 @@ FreeForAllLevel::FreeForAllLevel() {
 	Player* ai = new Player();
     mGameObjects[1] = ai;
 	mConfigurations[1] = new PlayerAi(ai);
-    mUiObjects [0] = new UIText("Bora", 0, 0, {255, 0, 0});
+    mUiObjects [0] = new UIText("Bora", {0, 0}, {255, 0, 0});
 
 	InputManager::registerObject(mGameObjects[0], InputType::KEYBOARD, mConfigurations[0]);
 	//InputManager::registerObject(mGameObjects[1], InputType::CONTROLLER, mConfigurations[1]);

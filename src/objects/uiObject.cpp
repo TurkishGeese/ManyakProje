@@ -3,14 +3,11 @@
 #include "renderer.hpp"
 
 UIObject::~UIObject() {
-    if (mTexture != nullptr)
-        SDL_DestroyTexture(mSDL_Texture);
-    if (mSDL_Texture != nullptr)
-        SDL_DestroyTexture(mSDL_Texture);
+    delete mTexture;
 }
 
 void UIObject::render() {
-	Renderer::render(mSDL_Texture, &mRenderBox);
+	mTexture->render(mPosition);
 }
 
 void UIObject::update(){}

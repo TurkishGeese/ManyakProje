@@ -7,11 +7,18 @@
 #include "uiText.hpp"
 #include "uiButton.hpp"
 
+
+//We defined this function in IntroLevel as a method but then got and error related to function passing
+void startFunc(){
+    InputManager::reset();
+	Environment::sChangeLevel = new FreeForAllLevel();
+}
+
 IntroLevel::IntroLevel() {
     mUiObjects = std::vector<UIObject*>(2);
     mGameObjects = std::vector<GameObject*>(0);
-    mUiObjects[0] = new UIText("Intro Level", 0, 0, { 255, 0, 0 });
-    mUiObjects[1] = new UIButton("buttonIdle.png", "buttonactive.png", 100.0f, 100.0f, 300.0f, 100.0f);
+    mUiObjects[0] = new UIText("Intro Level", {0, 0}, { 0, 0, 0 });
+    mUiObjects[1] = new UIButton(startFunc, "start", {100.0f, 100.0f}, {300.0f, 100.0f});
 }
 
 void IntroLevel::preUpdate() {
