@@ -9,6 +9,7 @@
 11. Shouldn't require controllers to be connected at the start of the game.
 12. Controller errors should be handled more gracefully because they can easily connect/disconnect.
 13. Should support axis movement on controllers.
+14. On Windows we use /EHsc to suppress a message. This should be investigated. We don't know why we use the flag.
 
 # COMPLETED
 2. Hotloading
