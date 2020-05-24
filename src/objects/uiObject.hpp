@@ -1,7 +1,7 @@
 #pragma once
 
 #include "manyakSDL.hpp"
-#include "texture.hpp"
+#include "asset.hpp"
 #include "vec2.hpp"
 
 class UIObject {
@@ -14,7 +14,7 @@ public:
 	virtual ~UIObject();
 protected:
 
-	Texture* mTexture;
+	Asset* mAsset;
 	Vec2 mPosition;
 	Vec2 mRenderSize;
 };

@@ -7,5 +7,6 @@ enum class Action {
 	WALK_DOWN = 3,
 	WALK_LEFT = 4,
 	WALK_RIGHT = 5,
-	SELECT = 6
+	SELECT = 6,
+	FIRE = 7
 };

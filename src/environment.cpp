@@ -17,6 +17,7 @@
 #include "timer.hpp"
 #include "level.hpp"
 #include "introLevel.hpp"
+#include "assetManager.hpp"
 
 #ifndef MANYAK_GAME
 #define MANYAK_GAME 
@@ -96,6 +97,7 @@ void Environment::initialize() {
 bool Environment::start() {
     Renderer::initialize(mRenderer);
     InputManager::initialize();
+    AssetManager::initialize();
     if (!mGameState.initialized) return false;
 
     bool running = true;

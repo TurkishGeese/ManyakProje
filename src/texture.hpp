@@ -8,16 +8,17 @@
 class Texture {
 
 public:
-	Texture(std::string path, Vec2 size);
-	Texture(std::string path, Vec2 size, SDL_Rect clip); // TODO better way to handle clips in textures?
-	Texture(SDL_Surface *textSurface, Vec2 size);
+	Texture(std::string path, Vec2 clipGrid, int clips);
+	Texture(SDL_Surface *textSurface);
 	~Texture();
 
-	void render(Vec2 position);
+	void render(Vec2 position, Vec2 renderSize);
+	bool render(Vec2 position, Vec2 renderSize, int clip);
 
 private:
-	SDL_Rect mClip;
-	Vec2 mRenderSize;
+	int mClips;
+	Vec2 mClipGrid;
+	Vec2 mClipUnit;
 	Vec2 mTextureSize;
 	SDL_Texture* mTexture;
 	bool isClipped = false;

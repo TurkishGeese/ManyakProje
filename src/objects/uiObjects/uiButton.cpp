@@ -4,31 +4,27 @@
 #include "inputManager.hpp"
 #include "environment.hpp"
 #include "freeForAllLevel.hpp"
-
-std::string UIButton::sIdlePath = "buttonIdle.png";
-std::string UIButton::sActivePath = "buttonActive.png";
+#include "assetManager.hpp"
 
 UIButton::UIButton(void (*func)(), std::string text, Vec2 position, Vec2 size) {
 	mFunction = func;
 	mPosition = position;
 	mRenderSize = size;
 
-	mTexture = new Texture(sIdlePath, mRenderSize);
-	mTextureActive = new Texture(sActivePath, mRenderSize);
+	mAsset = AssetManager::getAsset("button");
 	mText = new UIText(text, {0, 0}, { 0, 0, 0 });
 	Vec2 textPosition = calculateTextPosition();
 	mText->setPosition(textPosition);
 }
 
 UIButton::~UIButton(){
-	delete mTextureActive;
 }
 
 void UIButton::render(){
 	if(isClicked){
-		mTextureActive->render(mPosition);
+		mAsset->render("active", mPosition, mRenderSize);
 	} else {
-		mTexture->render(mPosition);
+		mAsset->render("default", mPosition, mRenderSize);
 	}
 	mText->render();
 }

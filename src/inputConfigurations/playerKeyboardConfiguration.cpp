@@ -8,4 +8,5 @@ PlayerKeyboardConfiguration::PlayerKeyboardConfiguration() {
 	configuration[Action::WALK_DOWN] = KEY_s;
 	configuration[Action::WALK_LEFT] = KEY_a;
 	configuration[Action::WALK_RIGHT] = KEY_d;
+	configuration[Action::FIRE] = KEY_SPACE;
 }

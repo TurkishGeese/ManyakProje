@@ -1,0 +1,33 @@
+8
+
+default
+warrior/Idle.png
+1 6 6
+
+attack1
+warrior/Attack1.png
+1 4 4
+
+attack2
+warrior/Attack2.png
+1 4 4
+
+death
+warrior/Death.png
+1 9 9
+
+fall
+warrior/Fall.png
+1 2 2
+
+hit
+warrior/Hit.png
+1 3 3
+
+jump
+warrior/Jump.png
+1 2 2
+
+run
+warrior/Run.png
+1 8 8

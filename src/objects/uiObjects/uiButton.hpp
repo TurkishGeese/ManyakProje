@@ -2,6 +2,7 @@
 
 #include "uiObject.hpp"
 #include "uiText.hpp"
+#include "asset.hpp"
 
 #include <string>
 
@@ -20,8 +21,5 @@ private:
     bool isButtonClicked();
     Vec2 calculateTextPosition();
     UIText* mText;
-    static std::string sIdlePath;
-    static std::string sActivePath;
-    Texture* mTextureActive;
     bool isClicked = false; 
 };

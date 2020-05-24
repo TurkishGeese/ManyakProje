@@ -1,7 +1,7 @@
 #pragma once
 
 #include "manyakSDL.hpp"
-#include "texture.hpp"
+#include "asset.hpp"
 #include "vec2.hpp"
 
 class GameObject {
@@ -13,6 +13,12 @@ public:
 	virtual ~GameObject();
 protected:
 
-	Texture* mTexture;
+	void changeActiveTexture(std::string name, int resetCount, bool force = false);
+
+	Asset* mAsset;
 	Vec2 mPosition;
+	Vec2 mRenderSize;
+	std::string mActive = "default";
+	float mClip = -1.0f;
+	int mClipResetCount = -1;
 };

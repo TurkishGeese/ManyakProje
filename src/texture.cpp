@@ -2,21 +2,22 @@
 
 #include "renderer.hpp"
 
-Texture::Texture(std::string path, Vec2 size) {
+#include <assert.h>
+#include "logger.hpp"
+
+Texture::Texture(std::string path, Vec2 clipGrid, int clips) {
+	isClipped = clips != 1;
 	mTexture = Renderer::loadTextureFromPath(path, mTextureSize);
-	mRenderSize = size;
+	mClipGrid = clipGrid;
+	mClipUnit = { mTextureSize.x / clipGrid.x, mTextureSize.y / clipGrid.y };
+	mClips = clips;
 }
 
-Texture::Texture(std::string path, Vec2 size, SDL_Rect clip) {
-	isClipped = true;
-	mTexture = Renderer::loadTextureFromPath(path, mTextureSize);
-	mRenderSize = size;
-	mClip = clip;
-}
-
-Texture::Texture(SDL_Surface *textSurface, Vec2 size){
+Texture::Texture(SDL_Surface *textSurface){
 	mTexture = Renderer::textureFromSurface(textSurface);
-	mRenderSize = size;
+	mClipGrid = { 1, 1 };
+	mClipUnit = { 0, 0 };
+	mClips = 1;
 }
 
 Texture::~Texture() {
@@ -24,15 +25,23 @@ Texture::~Texture() {
 		SDL_DestroyTexture(mTexture);
 }
 
+void Texture::render(Vec2 position, Vec2 renderSize) {
+	SDL_Rect renderPos = { (int)position.x, (int)position.y, (int)renderSize.x, (int)renderSize.y };
+	Renderer::render(mTexture, &renderPos);
+}
 
-void Texture::render(Vec2 position) {
-	if (isClipped) {
-		SDL_Rect renderPos = { (int)position.x, (int)position.y, (int)mRenderSize.x, (int)mRenderSize.y };
-		Renderer::render(mTexture, &renderPos, &mClip);
-	}
-	else {
-		SDL_Rect renderPos = { (int)position.x, (int)position.y, (int)mRenderSize.x, (int)mRenderSize.y };
-		Renderer::render(mTexture, &renderPos);
-	}
+bool Texture::render(Vec2 position, Vec2 renderSize, int clip) {
+	assert(isClipped && "Trying to clip an unclipped texture!");
+
+	SDL_Rect renderPos = { (int)position.x, (int)position.y, (int)renderSize.x, (int)renderSize.y };
+
+	bool ret = (clip >= mClips);
+	clip = clip % mClips;
+	int x = clip % (int)mClipGrid.x;
+	int y = clip / (int)mClipGrid.x;
+	SDL_Rect clipRect = { int(x * mClipUnit.x), int(y * mClipUnit.y), int(mClipUnit.x), int(mClipUnit.y) };
+
+	Renderer::render(mTexture, &renderPos, &clipRect);
+	return ret;
 }
 

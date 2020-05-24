@@ -3,11 +3,11 @@
 #include "renderer.hpp"
 
 UIObject::~UIObject() {
-    delete mTexture;
+    delete mAsset;
 }
 
 void UIObject::render() {
-	mTexture->render(mPosition);
+	mAsset->render("default", mPosition, mRenderSize);
 }
 
 void UIObject::update(){}

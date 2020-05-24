@@ -15,7 +15,7 @@ UIText::UIText(std::string text, Vec2 position, SDL_Color color){
     
     mPosition = position;
     mRenderSize = {(float) textSurface->w, (float) textSurface->h};
-    mTexture = new Texture(textSurface, mRenderSize);
+    mAsset = new Asset(new Texture(textSurface));
     SDL_FreeSurface(textSurface);
 }
 
