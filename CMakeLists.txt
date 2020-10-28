@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10.2)
 project (manyak_game)
 
 file(GLOB_RECURSE SOURCE "src/*.cpp")
+file(GLOB_RECURSE INCLUDE_FILES "src/*.hpp")
 list(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 if (WIN32)
@@ -69,7 +70,7 @@ else()
     set (CMAKE_CXX_FLAGS "-Wall -Werror -std=c++17 -stdlib=libc++")
 endif()
 
-add_library(manyak_game SHARED ${SOURCE})
+add_library(manyak_game SHARED ${SOURCE} ${INCLUDE_FILES})
 
 if (WIN32)
     # TODO FIGURE OUT PROPERLY HOTLOADING IN WINDOWS
@@ -96,7 +97,7 @@ target_link_libraries(manyak_game ${ALL_SDL2_LIBRARY_TARGETS})
 
 project(manyak_project)
 
-add_executable(manyak_project "src/main.cpp" "src/logger.cpp") 
+add_executable(manyak_project "src/main.cpp" "src/logger.cpp" "src/logger.hpp") 
 
 target_link_libraries(manyak_project manyak_game ${ALL_SDL2_LIBRARY_TARGETS})
 
