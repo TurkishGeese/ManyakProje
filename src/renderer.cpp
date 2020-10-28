@@ -4,11 +4,7 @@
 #include "manyakSDLimage.hpp"
 
 Renderer* Renderer::sInstance = nullptr;
-#if defined(MANYAK_WIN32)
-std::string Renderer::RESOURCE_DIR = "../../../../resources/";
-#else
 std::string Renderer::RESOURCE_DIR = "../resources/";
-#endif
 
 void Renderer::initialize(SDL_Renderer* sdlRenderer) {
 	sInstance = new Renderer(sdlRenderer);

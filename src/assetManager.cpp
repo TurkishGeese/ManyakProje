@@ -5,11 +5,7 @@
 
 AssetManager* AssetManager::sInstance = nullptr;
 
-#if defined(MANYAK_WIN32)
-std::string AssetManager::RESOURCE_DIR = "../../../../resources/";
-#else
 std::string AssetManager::RESOURCE_DIR = "../resources/";
-#endif
 
 void AssetManager::initialize() {
 	sInstance = new AssetManager();

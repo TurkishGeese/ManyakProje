@@ -6,6 +6,7 @@ file(GLOB_RECURSE SOURCE "src/*.cpp")
 list(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 if (WIN32)
+    include (${CMAKE_SOURCE_DIR}/3rdParty/vcpkg/scripts/buildsystems/vcpkg.cmake)
     set(CMAKE_C_COMPILE_OBJECT "<CMAKE_C_COMPILER> /EHsc /nologo <DEFINES> <INCLUDES> <FLAGS> /Fo<OBJECT> /FS -c <SOURCE>")
     set(CMAKE_CXX_COMPILE_OBJECT "<CMAKE_CXX_COMPILER> /EHsc /nologo /TP <DEFINES> <INCLUDES> <FLAGS> /Fo<OBJECT> /FS -c <SOURCE>")
 endif()
@@ -39,35 +40,29 @@ endif()
 add_definitions(-DMANYAK_GAME="$<TARGET_FILE:manyak_game>")
 
 if (WIN32)
-    find_library(SDL_2 NAMES SDL2 PATHS 3rdParty/SDL2-2.0.12/lib/x64)
+    find_package(SDL2 CONFIG REQUIRED)
+    find_package(sdl2-image CONFIG REQUIRED)
+    find_package(sdl2-ttf CONFIG REQUIRED)
+    set(ALL_SDL2_LIBRARY_TARGETS "SDL2::SDL2;SDL2::SDL2main;SDL2::SDL2_image;SDL2::SDL2_ttf")
 else()
     find_library(SDL_2 SDL2)
-endif()
-if (NOT SDL_2)
-  message(FATAL_ERROR "SDL2 could not be found")
-endif()
-
-
-if (WIN32)
-    find_library(SDL_2_image NAMES SDL2_image PATHS 3rdParty/SDL2_image-2.0.5/lib/x64)
-else()
+    if (NOT SDL_2)
+        message(FATAL_ERROR "SDL2 could not be found")
+    endif()
     find_library(SDL_2_image SDL2_image)
-endif()
-if (NOT SDL_2_image)
-  message(FATAL_ERROR "SDL2_image could not be found")
-endif()
-
-if (WIN32)
-    find_library(SDL_2_ttf NAMES SDL2_ttf PATHS 3rdParty/SDL2_ttf-2.0.15/lib/x64)
-else()
+    if (NOT SDL_2_image)
+      message(FATAL_ERROR "SDL2_image could not be found")
+    endif()
     find_library(SDL_2_ttf SDL2_ttf)
-endif()
-if (NOT SDL_2_ttf)
-  message(FATAL_ERROR "SDL2_ttf could not be found")
+    if (NOT SDL_2_ttf)
+        message(FATAL_ERROR "SDL2_ttf could not be found")
+    endif()
+
+    set(ALL_SDL2_LIBRARY_TARGETS "${SDL_2};${SDL_2_image};${SDL_2_ttf}")
 endif()
 
 if(WIN32)
-    file(GLOB DLLS "3rdParty/SDL2-2.0.12/lib/x64/*.dll" "3rdParty/SDL2_image-2.0.5/lib/x64/*.dll" "3rdParty/SDL2_ttf-2.0.15/lib/x64/*.dll")
+    #file(GLOB DLLS "3rdParty/SDL2-2.0.12/lib/x64/*.dll" "3rdParty/SDL2_image-2.0.5/lib/x64/*.dll" "3rdParty/SDL2_ttf-2.0.15/lib/x64/*.dll")
     
     set (CMAKE_CXX_FLAGS "/std:c++17 /EHsc")
 else()
@@ -97,23 +92,23 @@ if (WIN32)
 endif()
 
 # TODO manyak_project doesn't need to be linked against SDL libraries - SDL2
-target_link_libraries(manyak_game ${SDL_2} ${SDL_2_image} ${SDL_2_ttf})
+target_link_libraries(manyak_game ${ALL_SDL2_LIBRARY_TARGETS})
 
 project(manyak_project)
 
 add_executable(manyak_project "src/main.cpp" "src/logger.cpp") 
 
-target_link_libraries(manyak_project manyak_game ${SDL_2} ${SDL_2_image} ${SDL_2_ttf})
+target_link_libraries(manyak_project manyak_game ${ALL_SDL2_LIBRARY_TARGETS})
 
-if(WIN32)
+#if(WIN32)
     # copy the .dll files to the same folder as the executable
-    foreach(DLL ${DLLS})
-        add_custom_command(TARGET manyak_game POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            ${DLL}
-            $<TARGET_FILE_DIR:manyak_game>)
-    endforeach(DLL)
-endif()
+    #foreach(DLL ${DLLS})
+        #add_custom_command(TARGET manyak_game POST_BUILD
+            #COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            #${DLL}
+            #$<TARGET_FILE_DIR:manyak_game>)
+    #endforeach(DLL)
+#endif()
 
 #########################################################################################################################
 # This part is very helpful while debugging CMAKE. It has a lot of predefined variables and this part prints everything.
