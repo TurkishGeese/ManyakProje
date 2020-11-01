@@ -20,6 +20,7 @@ if(WIN32)
                         3rdParty/SDL2_image-2.0.5/include
                         3rdParty/SDL2_ttf-2.0.15/include
                         src
+                        src/engine
                         src/levels
                         src/objects
                         src/objects/gameObjects
@@ -30,6 +31,7 @@ if(WIN32)
     add_definitions(-DRUNNING_MANYAK_GAME="./temp_manyakGame.dll")
 else()
     include_directories(src
+                        src/engine
                         src/levels
                         src/objects
                         src/objects/gameObjects
