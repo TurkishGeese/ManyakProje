@@ -16,6 +16,18 @@ if(WIN32)
     SET(CMAKE_FIND_LIBRARY_PREFIXES "")
     SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
+    # Apparently "Correct way" to keep the source structure in Visual Studio
+    SET(SRC_DIRECTORIES "src;src/engine;src/levels;src/objects;src/objects/gameObjects;src/objects/uiObjects;src/inputConfigurations")
+    FOREACH(SRC_DIRECTORY ${SRC_DIRECTORIES})
+        file(GLOB CUR_DIR_SRCS "${SRC_DIRECTORY}/*.cpp")
+        file(GLOB CUR_DIR_INCLUDES "${SRC_DIRECTORY}/*.hpp")
+
+        string(SUBSTRING ${SRC_DIRECTORY} 3 -1 SRC_GRP_DIR)
+
+        source_group("Source Files${SRC_GRP_DIR}" FILES ${CUR_DIR_SRCS})
+        source_group("Header Files${SRC_GRP_DIR}" FILES ${CUR_DIR_INCLUDES})
+    ENDFOREACH()
+
     include_directories(3rdParty/SDL2-2.0.12/include
                         3rdParty/SDL2_image-2.0.5/include
                         3rdParty/SDL2_ttf-2.0.15/include
