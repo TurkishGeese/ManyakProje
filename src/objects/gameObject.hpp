@@ -3,6 +3,7 @@
 #include "manyakSDL.hpp"
 #include "asset.hpp"
 #include "vec2.hpp"
+#include "entity.hpp"
 
 class GameObject {
 
@@ -15,10 +16,5 @@ protected:
 
 	void changeActiveTexture(std::string name, int resetCount, bool force = false);
 
-	Asset* mAsset;
-	Vec2 mPosition;
-	Vec2 mRenderSize;
-	std::string mActive = "default";
-	float mClip = -1.0f;
-	int mClipResetCount = -1;
+	Entity m_entity;
 };

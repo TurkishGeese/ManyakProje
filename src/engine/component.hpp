@@ -1,13 +1,5 @@
 #pragma once
 
-#include "entity.hpp"
-
-class Component
+struct Component
 {
-public:
-	Component(Entity entity);
-
-protected:
-
-	Entity m_entity;
 };

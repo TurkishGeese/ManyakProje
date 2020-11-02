@@ -18,6 +18,10 @@
 #include "level.hpp"
 #include "introLevel.hpp"
 #include "assetManager.hpp"
+#include "master.hpp"
+#include "textureComponent.hpp"
+#include "transformComponent.hpp"
+#include "renderSystem.hpp"
 
 #ifndef MANYAK_GAME
 #define MANYAK_GAME 
@@ -100,6 +104,11 @@ bool Environment::start() {
     AssetManager::initialize();
     if (!mGameState.initialized) return false;
 
+    Master* master = Master::getInstance();
+    master->registerComponentType<TextureComponent>();
+    master->registerComponentType<TransformComponent>();
+    master->registerSystem<RenderSystem>();
+
     bool running = true;
 
     Level* level = new IntroLevel();
@@ -129,6 +138,7 @@ bool Environment::start() {
 
         SDL_RenderClear(mRenderer);
         level->render();
+        master->update();
 
         SDL_RenderPresent(mRenderer);
 
@@ -143,6 +153,7 @@ bool Environment::start() {
         }
     }
 
+    delete master;
     delete level;
     return false;
 }

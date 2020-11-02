@@ -1,9 +1,5 @@
 #pragma once
 
-class Entity
-{
-public:
-	Entity();
+#include <cstdint>
 
-	unsigned int Id;
-};
+using Entity = std::uint32_t;

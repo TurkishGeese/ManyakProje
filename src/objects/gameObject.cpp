@@ -1,32 +1,37 @@
 #include "gameObject.hpp"
 #include "renderer.hpp"
 
+#include "master.hpp"
+#include "textureComponent.hpp"
+#include "transformComponent.hpp"
+
 void GameObject::render() {
-	if (mClip == -1)
-		mAsset->render(mActive, mPosition, mRenderSize);
-	else {
-		bool reset = mAsset->render(mActive, mPosition, mRenderSize, (int)mClip);
-		if (reset) {
-			mClip = 0.0f;
-			if (mClipResetCount != -1) {
-				mClipResetCount -= 1;
-				if (mClipResetCount == 0) {
-					changeActiveTexture("default", -1, true);
-				}
+	Master* master = Master::getInstance();
+	TextureComponent* textureComponent = master->getComponentOfType<TextureComponent>(m_entity);
+	if (textureComponent->reset) {
+		textureComponent->mClip = 0.0f;
+		if (textureComponent->mClipResetCount != -1) {
+			textureComponent->mClipResetCount -= 1;
+			if (textureComponent->mClipResetCount == 0) {
+				changeActiveTexture("default", -1, true);
 			}
 		}
 	}
 }
 
 void GameObject::changeActiveTexture(std::string name, int resetCount, bool force) {
-	if ((mClipResetCount != -1 && resetCount != -1) ||
-		(mClipResetCount == -1 && name.compare(mActive) != 0)|| force) {
-		mClip = 0.0f;
-		mClipResetCount = resetCount;
-		mActive = name;
+	Master* master = Master::getInstance();
+	TextureComponent* textureComponent = master->getComponentOfType<TextureComponent>(m_entity);
+	if ((textureComponent->mClipResetCount != -1 && resetCount != -1) ||
+		(textureComponent->mClipResetCount == -1 && name.compare(textureComponent->mActive) != 0)|| force) {
+		textureComponent->mClip = 0.0f;
+		textureComponent->mClipResetCount = resetCount;
+		textureComponent->mActive = name;
 	}
 }
 
 GameObject::~GameObject() {
-	delete mAsset;
+	Master* master = Master::getInstance();
+	TextureComponent* textureComponent = master->getComponentOfType<TextureComponent>(m_entity);
+	delete textureComponent->mAsset;
 }
