@@ -3,6 +3,7 @@
 #include "manyakSDL.hpp"
 #include "asset.hpp"
 #include "vec2.hpp"
+#include "entity.hpp"
 
 class UIObject {
 
@@ -18,3 +19,9 @@ protected:
 	Vec2 mPosition;
 	Vec2 mRenderSize;
 };
+
+namespace UI
+{
+	Entity createText(std::string text, Vec2 position, SDL_Color color);
+	Entity createButton(void (*func)(), std::string text, Vec2 position, Vec2 size);
+}
