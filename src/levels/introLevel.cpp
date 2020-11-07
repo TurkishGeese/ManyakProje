@@ -18,7 +18,7 @@ void startFunc(){
 }
 
 IntroLevel::IntroLevel() {
-    mUiObjects = std::vector<UIObject*>(2);
+    mUiObjects = std::vector<UIObject*>(0);
     mGameObjects = std::vector<GameObject*>(0);
     //mUiObjects[0] = new UIText("Intro Level", {0, 0}, { 0, 0, 0 });
     //mUiObjects[1] = new UIButton(startFunc, "start", {100.0f, 100.0f}, {300.0f, 100.0f});
