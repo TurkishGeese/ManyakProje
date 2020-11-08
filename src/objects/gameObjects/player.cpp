@@ -18,7 +18,7 @@ Player::Player() {
 	master->addComponentOfType<TransformComponent>(m_entity);
 	Physics2DComponent* physics2DComponent = master->addComponentOfType<Physics2DComponent>(m_entity);
 	PhysicsSystem2D* physicsSystem = master->getSystem<PhysicsSystem2D>();
-	physicsSystem->initializeEntityAsDynamicBody(m_entity, { 25.f, 50.f }, { 9.375f, 31.25f }, 1.0f, 0.7f);
+	physicsSystem->initializeEntityAsDynamicBody(m_entity, { 25.f, 50.f }, { 9.375f, 31.25f }, 1.0f, 0.7f, STATIC_ONLY);
 	master->finalizeEntity(m_entity);
 
 	mDelta = 0.0f; // TODO this is needed for the AI. We should find a better way to propagate delta

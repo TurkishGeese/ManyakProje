@@ -5,6 +5,12 @@
 
 #include "box2d/box2d.h"
 
+enum PhysicsCategory
+{
+	DEFAULT = 0x0001,
+	STATIC_ONLY = 0x0002,
+};
+
 class PhysicsSystem2D : System
 {
 public:
@@ -17,8 +23,8 @@ public:
 	void setWorldSize(Vec2 size);
 	void setWindowSize(Vec2 size);
 
-	void initializeEntityAsStaticBody(Entity entity, Vec2 pos, Vec2 size);
-	void initializeEntityAsDynamicBody(Entity entity, Vec2 pos, Vec2 size, float density, float friction);
+	void initializeEntityAsStaticBody(Entity entity, Vec2 pos, Vec2 size, PhysicsCategory category = DEFAULT);
+	void initializeEntityAsDynamicBody(Entity entity, Vec2 pos, Vec2 size, float density, float friction, PhysicsCategory = DEFAULT);
 private:
 
 	b2Vec2 mGravity;

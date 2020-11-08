@@ -71,7 +71,7 @@ void PhysicsSystem2D::setWindowSize(Vec2 size)
 	Logger::logError("Setting window size.");
 }
 
-void PhysicsSystem2D::initializeEntityAsStaticBody(Entity entity, Vec2 pos, Vec2 size)
+void PhysicsSystem2D::initializeEntityAsStaticBody(Entity entity, Vec2 pos, Vec2 size, PhysicsCategory category)
 {
 	Master* master = Master::getInstance();
 	Physics2DComponent* component = master->getComponentOfType<Physics2DComponent>(entity);
@@ -83,11 +83,19 @@ void PhysicsSystem2D::initializeEntityAsStaticBody(Entity entity, Vec2 pos, Vec2
 	b2PolygonShape staticBox;
 	staticBox.SetAsBox(size.x / 2.f, size.y / 2.f);
 
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &staticBox;
+	if (category == STATIC_ONLY)
+	{
+		fixtureDef.filter.categoryBits = STATIC_ONLY;
+		fixtureDef.filter.maskBits = DEFAULT; // Collides only with default
+	}
+
 	component->Body->CreateFixture(&staticBox, 0.0f);
 	component->size = size;
 }
 
-void PhysicsSystem2D::initializeEntityAsDynamicBody(Entity entity, Vec2 pos, Vec2 size, float density, float friction)
+void PhysicsSystem2D::initializeEntityAsDynamicBody(Entity entity, Vec2 pos, Vec2 size, float density, float friction, PhysicsCategory category)
 {
 	Master* master = Master::getInstance();
 	Physics2DComponent* component = master->getComponentOfType<Physics2DComponent>(entity);
@@ -104,6 +112,11 @@ void PhysicsSystem2D::initializeEntityAsDynamicBody(Entity entity, Vec2 pos, Vec
 	fixtureDef.shape = &dynamicBox;
 	fixtureDef.density = density;
 	fixtureDef.friction = friction;
+	if (category == STATIC_ONLY)
+	{
+		fixtureDef.filter.categoryBits = STATIC_ONLY;
+		fixtureDef.filter.maskBits = DEFAULT; // Collides only with default
+	}
 
 	component->Body->CreateFixture(&fixtureDef);
 	component->size = size;
