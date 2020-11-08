@@ -5,6 +5,7 @@
 #include "entity.hpp"
 #include "system.hpp"
 #include "componentManager.hpp"
+#include "logger.hpp"
 
 #include <typeinfo>
 
@@ -15,27 +16,36 @@ public:
 
 	~Master();
 
+	// ENTITY FUNCTIONS
 	Entity createEntity();
 
 	void removeAllEntities();
 
+	void removeEntity(Entity entity);
+
+	void finalizeEntity(Entity entity);
+	// END ENTITY FUNCTIONS
+
+	// COMPONENT FUNCTIONS
 	template<typename T>
 	void registerComponentType();
-
-	template<typename T>
-	void registerSystem();
 
 	template<typename T>
 	T* getComponentOfType(Entity entity);
 
 	template<typename T>
 	T* addComponentOfType(Entity entity);
+	// END COMPONENT FUNCTIONS
 
-	void removeEntity(Entity entity);
+	// SYSTEM FUNCTIONS
+	template<typename T>
+	T* registerSystem();
 
-	void finalizeEntity(Entity entity);
+	template<typename T>
+	T* getSystem();
+	// END SYSTEM FUNCTIONS
 
-	void update();
+	void update(float delta);
 	
 private:
 	static Master* s_instance;
@@ -57,16 +67,6 @@ void Master::registerComponentType()
 	auto componentTypeManager = new ComponentManagerImpl<T>();
 
 	m_componentManagers[typeName] = (void*)componentTypeManager;
-}
-
-template<typename T>
-void Master::registerSystem()
-{
-	static_assert(std::is_base_of<System, T>::value, "T must be a system type");
-
-	T* system = new T();
-
-	m_systems.push_back((System*)system);
 }
 
 template<typename T>
@@ -97,4 +97,31 @@ T* Master::addComponentOfType(Entity entity)
 
 	ComponentManagerImpl<T>* mgr = (ComponentManagerImpl<T>*) it->second;
 	return mgr->addComponent(entity);
+}
+
+template<typename T>
+T* Master::registerSystem()
+{
+	static_assert(std::is_base_of<System, T>::value, "T must be a system type");
+
+	T* system = new T();
+
+	m_systems.push_back((System*)system);
+	
+	return system;
+}
+
+template<typename T>
+T* Master::getSystem()
+{
+	static_assert(std::is_base_of<System, T>::value, "T must be a system type");
+
+	for (auto system : m_systems)
+	{
+		if (std::string(typeid(*system).name()).compare(typeid(T).name()) == 0)
+		{
+			return (T*)system;
+		}
+	}
+	return nullptr;
 }

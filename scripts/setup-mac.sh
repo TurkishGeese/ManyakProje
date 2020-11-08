@@ -61,3 +61,21 @@ codesign -f -s - SDL2_ttf
 
 cd $CUR_DIR
 
+if [[ -d ./resources ]]
+then
+  cd './3rdParty'
+elif [[ -d ../resources ]]
+then
+  cd '../3rdParty'
+fi
+
+# Build and Install box2d
+git clone https://github.com/erincatto/box2d.git
+cd box2d
+mkdir build
+cd build
+cmake -DBOX2D_BUILD_DOCS=OFF ..
+cmake --build .
+cmake --build . --target INSTALL
+
+cd $CUR_DIR

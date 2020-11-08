@@ -22,6 +22,8 @@
 #include "textureComponent.hpp"
 #include "transformComponent.hpp"
 #include "renderSystem.hpp"
+#include "physics2DComponent.hpp"
+#include "physicsSystem2D.hpp"
 
 #ifndef MANYAK_GAME
 #define MANYAK_GAME 
@@ -107,7 +109,12 @@ bool Environment::start() {
     Master* master = Master::getInstance();
     master->registerComponentType<TextureComponent>();
     master->registerComponentType<TransformComponent>();
+    master->registerComponentType<Physics2DComponent>();
+    PhysicsSystem2D* physicsSystem = master->registerSystem<PhysicsSystem2D>();
     master->registerSystem<RenderSystem>();
+
+    physicsSystem->setWindowSize({640.f, 480.f});
+    physicsSystem->setWorldSize({50.0f, 100.0f});
 
     bool running = true;
 
@@ -138,7 +145,7 @@ bool Environment::start() {
 
         SDL_RenderClear(mRenderer);
         level->render();
-        master->update();
+        master->update(delta);
 
         SDL_RenderPresent(mRenderer);
 

@@ -59,6 +59,8 @@ if (WIN32)
     find_package(sdl2-image CONFIG REQUIRED)
     find_package(sdl2-ttf CONFIG REQUIRED)
     set(ALL_SDL2_LIBRARY_TARGETS "SDL2::SDL2;SDL2::SDL2main;SDL2::SDL2_image;SDL2::SDL2_ttf")
+    find_package(unofficial-box2d CONFIG REQUIRED)
+    set(BOX2D_LIBRARY_TARGET "unofficial::box2d::box2d")
 else()
     find_library(SDL_2 SDL2)
     if (NOT SDL_2)
@@ -74,6 +76,9 @@ else()
     endif()
 
     set(ALL_SDL2_LIBRARY_TARGETS "${SDL_2};${SDL_2_image};${SDL_2_ttf}")
+
+    find_package(box2d REQUIRED)
+    set(BOX2D_LIBRARY_TARGET "box2d")
 endif()
 
 if(WIN32)
@@ -107,13 +112,13 @@ if (WIN32)
 endif()
 
 # TODO manyak_project doesn't need to be linked against SDL libraries - SDL2
-target_link_libraries(manyak_game ${ALL_SDL2_LIBRARY_TARGETS})
+target_link_libraries(manyak_game ${ALL_SDL2_LIBRARY_TARGETS} ${BOX2D_LIBRARY_TARGET})
 
 project(manyak_project)
 
 add_executable(manyak_project "src/main.cpp" "src/logger.cpp" "src/logger.hpp") 
 
-target_link_libraries(manyak_project manyak_game ${ALL_SDL2_LIBRARY_TARGETS})
+target_link_libraries(manyak_project manyak_game ${ALL_SDL2_LIBRARY_TARGETS} ${BOX2D_LIBRARY_TARGET})
 
 #if(WIN32)
     # copy the .dll files to the same folder as the executable

@@ -4,8 +4,9 @@
 #include "textureComponent.hpp"
 #include "transformComponent.hpp"
 
-void RenderSystem::update()
+void RenderSystem::update(float delta)
 {
+	(void)delta;
 	Master* master = Master::getInstance();
 	for (auto entity : m_entities)
 	{

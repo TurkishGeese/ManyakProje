@@ -11,4 +11,5 @@ Set-Location vcpkg
 .\vcpkg.exe install sdl2-image:x64-windows
 .\vcpkg.exe install sdl2-ttf:x64-windows
 .\vcpkg.exe install sdl2-net:x64-windows
+.\vcpkg.exe install box2d:x64-windows
 Set-Location ../

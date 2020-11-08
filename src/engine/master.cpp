@@ -38,9 +38,9 @@ Entity Master::createEntity()
 
 void Master::removeAllEntities()
 {
-	for (auto entity : m_entities)
+	while (m_entities.size() > 0)
 	{
-		removeEntity(entity);
+		removeEntity(*m_entities.begin());
 	}
 }
 
@@ -65,10 +65,13 @@ void Master::finalizeEntity(Entity entity)
 	}
 }
 
-void Master::update()
+void Master::update(float delta)
 {
+	// TODO These systems NEED to be ordered. Figure out a way to do it nicely
+	// Maybe after all systems are initialized we should sort them or something?
+	// Right now they're just in the order they're inserted in. BE CAREFUL
 	for (auto system : m_systems)
 	{
-		system->update();
+		system->update(delta);
 	}
 }

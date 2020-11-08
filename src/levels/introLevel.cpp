@@ -8,11 +8,13 @@
 #include "uiText.hpp"
 #include "uiButton.hpp"
 #include "uiObject.hpp"
+#include "master.hpp"
 
 //We defined this function in IntroLevel as a method but then got an error related to function passing
 void startFunc(){
     InputManager::reset();
     AssetManager::reset();
+    Master::getInstance()->removeAllEntities();
 
     Environment::sChangeLevel = new FreeForAllLevel();
 }
@@ -27,6 +29,7 @@ IntroLevel::IntroLevel() {
 }
 
 void IntroLevel::preUpdate() {
+    startFunc();
     if (InputManager::getActionState(Action::SELECT) == InputState::PRESSED) {
         startFunc();
     }
