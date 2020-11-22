@@ -11,7 +11,7 @@ class AssetManager {
 public:
 	static void initialize();
 	static Asset* getAsset(std::string name);
-	static void reset();
+	static void reset(); // TODO need to be managing assets currently we don't free them (I think)
 
 private:
 	static AssetManager* sInstance;

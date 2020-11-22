@@ -15,12 +15,8 @@ void InputManager::quit() {
     delete sInstance;
 }
 
-void InputManager::reset() {
-    sInstance->internalReset();
-}
-
-void InputManager::registerObject(GameObject* obj, InputType inputType, InputConfiguration* config) {
-    sInstance->internalRegisterObject(obj, inputType, config);
+Input* InputManager::registerObject(InputType inputType) {
+    return sInstance->internalRegisterObject(inputType);
 }
 
 void InputManager::updateInput() {
@@ -29,10 +25,6 @@ void InputManager::updateInput() {
 
 InputState InputManager::getActionState(Action action) {
     return sInstance->internalGetActionState(action);
-}
-
-InputState InputManager::getActionState(GameObject* obj, Action action) {
-    return sInstance->internalGetActionState(obj, action);
 }
 
 Vec2 InputManager::getMouseLocation() {
@@ -74,34 +66,29 @@ InputManager::InputManager() {
 
 }
 
-void InputManager::internalReset() {
-    mInputMapping.clear();
-}
-
-void InputManager::internalRegisterObject(GameObject* obj, InputType inputType, InputConfiguration* config) {
-    mInputConfigurations[obj] = config;
+Input* InputManager::internalRegisterObject(InputType inputType) {
     if (inputType == InputType::KEYBOARD) {
-        mInputMapping[obj] = &mKeyboard;
+        return &mKeyboard;
     }
     else if (inputType == InputType::AI_PLAYER) {
-        mInputMapping[obj] = &mAiInput;
+        return &mAiInput;
     }
     else if (inputType == InputType::CONTROLLER) {
         if (!mController1Used) {
             mController1Used = true;
-            mInputMapping[obj] = &mController1;
+            return &mController1;
         }
         else if (!mController2Used) {
             mController2Used = true;
-            mInputMapping[obj] = &mController2;
+            return &mController2;
         }
         else if (!mController3Used) {
             mController3Used = true;
-            mInputMapping[obj] = &mController3;
+            return &mController3;
         }
         else if (!mController4Used) {
             mController4Used = true;
-            mInputMapping[obj] = &mController4;
+            return &mController4;
         }
         else {
             Logger::logError("Tried to register more than 4 objects to controllers.");
@@ -152,16 +139,6 @@ void InputManager::internalUpdateInput() {
 
 InputState InputManager::internalGetActionState(Action action) {
     return mKeyboard.getInputState(mDefaultConfig.getInputKey(action));
-}
-
-InputState InputManager::internalGetActionState(GameObject* obj, Action action) {
-    auto configEntry = mInputConfigurations.find(obj);
-    assert(configEntry != mInputConfigurations.end() && "Couldn't find configuration of the object");
-
-    auto mapEntry = mInputMapping.find(obj);
-    assert(mapEntry != mInputMapping.end() && "Couldn't find configuration of the object");
-
-    return mapEntry->second->getInputState(configEntry->second->getInputKey(action));
 }
 
 Vec2 InputManager::internalGetMouseLocation() {

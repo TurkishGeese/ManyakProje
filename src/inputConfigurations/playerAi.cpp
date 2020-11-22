@@ -2,7 +2,6 @@
 
 #include "action.hpp"
 #include "inputKey.hpp"
-#include "player.hpp"
 #include "logger.hpp"
 #include "random.hpp"
 
@@ -17,8 +16,7 @@ bool reset(float number) {
 	return (roll <= threshold);
 }
 
-PlayerAi::PlayerAi(Player* player) {
-	mPlayer = player;
+PlayerAi::PlayerAi() {
 	isMoving = false;
 	mHorizontalMovement = 0.0f;
 	mVerticalMovement = 0.0f;
@@ -26,7 +24,7 @@ PlayerAi::PlayerAi(Player* player) {
 }
 
 InputKey PlayerAi::getInputKey(Action action) {
-	float delta = mPlayer->getLastDelta();
+	float delta = 1.0f / 60.f; // TODO what was I using this for. How do I replace this
 
 	if (isMoving) {
 		bool moved = false;

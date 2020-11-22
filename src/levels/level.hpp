@@ -14,7 +14,5 @@ public:
 
 	virtual ~Level();
 protected:
-	std::vector<GameObject*> mGameObjects;
-	std::vector<UIObject*> mUiObjects;
 	std::vector<InputConfiguration*> mConfigurations;
 };

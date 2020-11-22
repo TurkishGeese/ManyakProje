@@ -18,12 +18,10 @@ class InputManager {
 public:
 	static void initialize();
 	static void quit();
-	static void reset();
 
-	static void registerObject(GameObject* obj, InputType inputType, InputConfiguration* config);
+	static Input* registerObject(InputType inputType);
 	static void updateInput();
 	static InputState getActionState(Action action);
-	static InputState getActionState(GameObject* obj, Action action);
 
 	static Vec2 getMouseLocation();
 	static bool ctrlDown();
@@ -33,12 +31,9 @@ public:
 private:
 	InputManager();
 
-	void internalReset();
-
-	void internalRegisterObject(GameObject* obj, InputType inputType, InputConfiguration* config);
+	Input* internalRegisterObject(InputType inputType);
 	void internalUpdateInput();
 	InputState internalGetActionState(Action action);
-	InputState internalGetActionState(GameObject* obj, Action action);
 	Vec2 internalGetMouseLocation();
 	bool internalCtrlDown();
 	bool internalAltDown();
@@ -52,8 +47,6 @@ private:
 	ControllerInput mController3;
 	ControllerInput mController4;
 	AIInput mAiInput;
-	std::map<GameObject*, Input*> mInputMapping = std::map<GameObject*, Input*>();
-	std::map<GameObject*, InputConfiguration*> mInputConfigurations = std::map<GameObject*, InputConfiguration*>();
 	InputConfiguration mDefaultConfig = DefaultConfiguration();
 	bool mController1Used = false;
 	bool mController2Used = false;

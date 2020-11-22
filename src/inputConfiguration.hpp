@@ -5,6 +5,7 @@
 #include "inputKey.hpp"
 #include "action.hpp"
 
+// TODO need to have plenty of static instances of this. Figure out a system for it
 class InputConfiguration {
 
 public:

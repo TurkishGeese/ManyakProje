@@ -9,16 +9,6 @@
 #include "transformComponent.hpp"
 #include "assetManager.hpp"
 
-UIObject::~UIObject() {
-    delete mAsset;
-}
-
-void UIObject::render() {
-	mAsset->render("default", mPosition, mRenderSize);
-}
-
-void UIObject::update(){}
-
 /// <summary>
 /// This function calculates what position the inner box has to be in order to be in the center of the outer box.
 /// </summary>
@@ -56,7 +46,7 @@ Entity UI::createText(std::string text, Vec2 position, SDL_Color color)
 
 Entity UI::createButton(void (*func)(), std::string text, Vec2 position, Vec2 size)
 {
-    (void)func; // TODO input System of some sorts?
+    (void)func; // TODO ui input System of some sorts?
     Master* master = Master::getInstance();
     Entity entity = master->createEntity();
     TextureComponent* textureComponent = master->addComponentOfType<TextureComponent>(entity);
