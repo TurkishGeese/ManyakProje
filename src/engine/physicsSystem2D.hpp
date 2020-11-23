@@ -20,6 +20,7 @@ public:
 	virtual void finalizeEntity(Entity entity);
 	virtual void removeEntity(Entity entity);
 
+	void setWorldGravity(Vec2 g);
 	void setWorldSize(Vec2 size);
 	void setWindowSize(Vec2 size);
 

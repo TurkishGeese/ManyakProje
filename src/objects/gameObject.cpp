@@ -37,30 +37,35 @@ void playerUpdate(Entity entity, Input* input, InputConfiguration* config, float
 	b2Vec2 force(0.f, 0.f);
 	
 	if (input->getInputState(config->getInputKey(Action::WALK_UP)) & (InputState::PRESSED | InputState::HELD)) {
-		force.y -= 5000.0f;
+		force.y -= 40000.0f;
 		run = true;
 	}
 
 	if (input->getInputState(config->getInputKey(Action::WALK_DOWN)) & (InputState::PRESSED | InputState::HELD)) {
-		force.y += 5000.0f;
+		force.y += 40000.0f;
 		run = true;
 	}
 
 	if (input->getInputState(config->getInputKey(Action::WALK_LEFT)) & (InputState::PRESSED | InputState::HELD)) {
-		force.x -= 5000.0f;
+		force.x -= 40000.0f;
 		run = true;
 	}
 
 	if (input->getInputState(config->getInputKey(Action::WALK_RIGHT)) & (InputState::PRESSED | InputState::HELD)) {
-		force.x += 5000.0f;
+		force.x += 40000.0f;
 		run = true;
 	}
-	physics2DComponent->Body->ApplyForceToCenter(force, true);
 
 	if (run)
+	{
 		changeActiveTexture(entity, "run", -1, false);
+		physics2DComponent->Body->ApplyForceToCenter(force, true);
+	}
 	else
+	{
 		changeActiveTexture(entity, "default", -1, false);
+		//physics2DComponent->Body->SetLinearVelocity(b2Vec2(0.f, 0.f));
+	}
 
 	if (input->getInputState(config->getInputKey(Action::FIRE)) & InputState::PRESSED)
 		changeActiveTexture(entity, "attack1", 1, false);
@@ -76,7 +81,7 @@ Entity Game::createPlayer(InputType inputType, InputConfiguration* config)
 
 	Physics2DComponent* physics2DComponent = master->addComponentOfType<Physics2DComponent>(entity);
 	PhysicsSystem2D* physicsSystem = master->getSystem<PhysicsSystem2D>();
-	physicsSystem->initializeEntityAsDynamicBody(entity, { 25.f, 50.f }, { 9.375f, 31.25f }, 1.0f, 0.9f, STATIC_ONLY);
+	physicsSystem->initializeEntityAsDynamicBody(entity, { 25.f, 50.f }, { 9.375f, 31.25f }, 1.0f, 0.f, STATIC_ONLY);
 	master->finalizeEntity(entity);
 
 	//mDelta = 0.0f; // TODO this is needed for the AI. We should find a better way to propagate delta

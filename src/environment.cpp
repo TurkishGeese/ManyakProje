@@ -111,6 +111,7 @@ bool Environment::start() {
     if (!mGameState.initialized) return false;
 
     Master* master = Master::getInstance();
+    // TODO create an active game system that allows the "game" to register what it wants
     master->registerComponentType<TextureComponent>();
     master->registerComponentType<TransformComponent>();
     master->registerComponentType<Physics2DComponent>();

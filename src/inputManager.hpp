@@ -13,6 +13,8 @@
 #include "inputConfiguration.hpp"
 #include "defaultConfiguration.hpp"
 
+#include <vector>
+
 class InputManager {
 
 public:

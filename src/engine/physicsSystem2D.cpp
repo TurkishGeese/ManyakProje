@@ -6,7 +6,7 @@
 #include "physics2DComponent.hpp"
 
 PhysicsSystem2D::PhysicsSystem2D() :
-	mGravity(0.0f, 0.0f), // Gravity doesn't exist since it's top down. TODO make this configurable
+	mGravity(0.0f, 0.0f),
 	mWorld(new b2World(mGravity))
 {
 }
@@ -60,6 +60,12 @@ void PhysicsSystem2D::removeEntity(Entity entity)
 	m_entities.erase(entity);
 }
 
+void PhysicsSystem2D::setWorldGravity(Vec2 g)
+{
+	mGravity.Set(g.x, g.y);
+	mWorld->SetGravity(mGravity);
+}
+
 void PhysicsSystem2D::setWorldSize(Vec2 size)
 {
 	mWorldSize = size;
@@ -102,6 +108,7 @@ void PhysicsSystem2D::initializeEntityAsDynamicBody(Entity entity, Vec2 pos, Vec
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(pos.x, pos.y);
+	bodyDef.linearDamping = 5.0f;
 	component->Body = mWorld->CreateBody(&bodyDef);
 	component->Body->SetFixedRotation(true); // TODO WE WILL PROLLY NEED ROTATION. Handle this better
 
