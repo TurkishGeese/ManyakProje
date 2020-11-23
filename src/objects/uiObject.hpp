@@ -8,5 +8,5 @@
 namespace UI
 {
 	Entity createText(std::string text, Vec2 position, SDL_Color color);
-	Entity createButton(void (*func)(), std::string text, Vec2 position, Vec2 size);
+	Entity createButton(void (*onClick)(), std::string text, Vec2 position, Vec2 size);
 }

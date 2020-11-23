@@ -26,6 +26,8 @@
 #include "physicsSystem2D.hpp"
 #include "inputComponent.hpp"
 #include "inputSystem.hpp"
+#include "uiInputComponent.hpp"
+#include "uiInputSystem.hpp"
 
 #ifndef MANYAK_GAME
 #define MANYAK_GAME 
@@ -113,9 +115,11 @@ bool Environment::start() {
     master->registerComponentType<TransformComponent>();
     master->registerComponentType<Physics2DComponent>();
     master->registerComponentType<InputComponent>();
+    master->registerComponentType<UIInputComponent>();
     PhysicsSystem2D* physicsSystem = master->registerSystem<PhysicsSystem2D>();
     master->registerSystem<RenderSystem>();
     master->registerSystem<InputSystem>();
+    master->registerSystem<UIInputSystem>();
 
     physicsSystem->setWindowSize({640.f, 480.f});
     physicsSystem->setWorldSize({50.0f, 100.0f});

@@ -16,6 +16,8 @@ public:
 
 	~Master();
 
+	void reset(void (*resetFunc)());
+
 	// ENTITY FUNCTIONS
 	Entity createEntity();
 
@@ -55,6 +57,7 @@ private:
 	std::unordered_set<Entity> m_entities;
 	std::unordered_map<std::string, void*> m_componentManagers;
 	std::vector<System*> m_systems;
+	void (*m_resetFunc)() = nullptr;
 };
 
 template<typename T>

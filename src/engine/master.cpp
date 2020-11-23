@@ -28,6 +28,12 @@ Master::~Master()
 	}
 }
 
+
+void Master::reset(void (*resetFunc)())
+{
+	m_resetFunc = resetFunc;
+}
+
 Entity Master::createEntity()
 {
 	static unsigned int idGen = 0;
@@ -73,5 +79,11 @@ void Master::update(float delta)
 	for (auto system : m_systems)
 	{
 		system->update(delta);
+	}
+	if (m_resetFunc != nullptr)
+	{
+		removeAllEntities();
+		m_resetFunc();
+		m_resetFunc = nullptr;
 	}
 }
