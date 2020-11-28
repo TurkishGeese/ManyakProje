@@ -102,19 +102,6 @@ bool Environment::start() {
     AssetManager::initialize();
 
     Master* master = Master::getInstance();
-    // TODO create an active game system that allows the "game" to register what it wants
-    master->registerComponentType<TextureComponent>();
-    master->registerComponentType<TransformComponent>();
-    master->registerComponentType<Physics2DComponent>();
-    master->registerComponentType<InputComponent>();
-    master->registerComponentType<UIInputComponent>();
-    PhysicsSystem2D* physicsSystem = master->registerSystem<PhysicsSystem2D>();
-    master->registerSystem<RenderSystem>();
-    master->registerSystem<InputSystem>();
-    master->registerSystem<UIInputSystem>();
-
-    physicsSystem->setWindowSize({640.f, 480.f});
-    physicsSystem->setWorldSize({50.0f, 100.0f});
 
     bool running = true;
 
