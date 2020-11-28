@@ -1,58 +1,79 @@
 cmake_minimum_required(VERSION 3.10.2)
 
-project (manyak_game)
+# NOTE: While writing functions ensure that you're correctly outputting to a parent scope
 
-file(GLOB_RECURSE SOURCE "src/*.cpp")
-file(GLOB_RECURSE INCLUDE_FILES "src/*.hpp")
-list(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+# Gets all the directories within the ${curr_dir} directory
+# this will reset the Variable ${output_list} and turn it into a list result of this function 
+function(get_all_directories output_list curr_dir)
+
+    file(GLOB all_files ${curr_dir}/*)
+
+    set(temp_list "")
+    foreach(file ${all_files})
+        if(IS_DIRECTORY ${file})
+            get_filename_component(dir_name ${file} NAME)
+            list(APPEND temp_list ${dir_name})
+        endif()
+    endforeach()
+    set(${output_list} ${temp_list} PARENT_SCOPE)
+endfunction()
+
+function(gather_current_files cpp_list hpp_list source_group_prefix curr_dir)
+    # find all files needed in subdirectory
+    file(GLOB found_cpp "${curr_dir}/*.cpp")
+    file(GLOB found_hpp "${curr_dir}/*.hpp")
+
+    # specify a source group for all of these files
+    set(found_files "")
+    list(APPEND found_files ${found_cpp})
+    list(APPEND found_files ${found_hpp})
+    source_group(${source_group_prefix} FILES ${found_files})
+
+    # update 
+    set(${cpp_list} ${found_cpp} PARENT_SCOPE)
+    set(${hpp_list} ${found_hpp} PARENT_SCOPE)
+
+    # include this directory for includes
+    include_directories(${curr_dir})
+endfunction()
+
+function(gather_all_files_under_subdirectory cpp_list hpp_list source_group_prefix curr_dir)
+    message("Processing folder ${curr_dir}")
+    gather_current_files(temp_cpp_list temp_hpp_list ${source_group_prefix} ${curr_dir})
+
+    # recurse into all subdirectories
+    get_all_directories(sub_dirs ${curr_dir})
+    foreach(sub_dir ${sub_dirs})
+        gather_all_files_under_subdirectory(temp_sub_cpp_list temp_sub_hpp_list "${source_group_prefix}/${sub_dir}" "${curr_dir}/${sub_dir}")
+        list(APPEND temp_cpp_list ${temp_sub_cpp_list})
+        list(APPEND temp_hpp_list ${temp_sub_hpp_list})
+    endforeach()
+    set(${cpp_list} ${temp_cpp_list} PARENT_SCOPE)
+    set(${hpp_list} ${temp_hpp_list} PARENT_SCOPE)
+endfunction()
+
+project (manyak_engine)
+
+set(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (WIN32)
     include (${CMAKE_SOURCE_DIR}/3rdParty/vcpkg/scripts/buildsystems/vcpkg.cmake)
     set(CMAKE_C_COMPILE_OBJECT "<CMAKE_C_COMPILER> /EHsc /nologo <DEFINES> <INCLUDES> <FLAGS> /Fo<OBJECT> /FS -c <SOURCE>")
     set(CMAKE_CXX_COMPILE_OBJECT "<CMAKE_CXX_COMPILER> /EHsc /nologo /TP <DEFINES> <INCLUDES> <FLAGS> /Fo<OBJECT> /FS -c <SOURCE>")
-endif()
 
-if(WIN32)
     SET(CMAKE_FIND_LIBRARY_PREFIXES "")
     SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
-    # Apparently "Correct way" to keep the source structure in Visual Studio
-    SET(SRC_DIRECTORIES "src;src/engine;src/levels;src/objects;src/objects/gameObjects;src/objects/uiObjects;src/inputConfigurations")
-    FOREACH(SRC_DIRECTORY ${SRC_DIRECTORIES})
-        file(GLOB CUR_DIR_SRCS "${SRC_DIRECTORY}/*.cpp")
-        file(GLOB CUR_DIR_INCLUDES "${SRC_DIRECTORY}/*.hpp")
-
-        string(SUBSTRING ${SRC_DIRECTORY} 3 -1 SRC_GRP_DIR)
-
-        source_group("Source Files${SRC_GRP_DIR}" FILES ${CUR_DIR_SRCS})
-        source_group("Header Files${SRC_GRP_DIR}" FILES ${CUR_DIR_INCLUDES})
-    ENDFOREACH()
-
     include_directories(3rdParty/SDL2-2.0.12/include
                         3rdParty/SDL2_image-2.0.5/include
-                        3rdParty/SDL2_ttf-2.0.15/include
-                        src
-                        src/engine
-                        src/levels
-                        src/objects
-                        src/objects/gameObjects
-                        src/objects/uiObjects
-                        src/inputConfigurations)
+                        3rdParty/SDL2_ttf-2.0.15/include)
 
     add_definitions(-DMANYAK_WIN32)
-    add_definitions(-DRUNNING_MANYAK_GAME="./temp_manyakGame.dll")
+    add_definitions(-DRUNNING_MANYAK_GAME="./Debug/temp_manyakGame.dll")
 else()
-    include_directories(src
-                        src/engine
-                        src/levels
-                        src/objects
-                        src/objects/gameObjects
-                        src/objects/uiObjects
-                        src/inputConfigurations)
     add_definitions(-DMANYAK_MAC)
     add_definitions(-DRUNNING_MANYAK_GAME="./temp_manyakGame")
 endif()
-add_definitions(-DMANYAK_GAME="$<TARGET_FILE:manyak_game>")
 
 if (WIN32)
     find_package(SDL2 CONFIG REQUIRED)
@@ -89,36 +110,27 @@ else()
     set (CMAKE_CXX_FLAGS "-Wall -Werror -std=c++17 -stdlib=libc++")
 endif()
 
-add_library(manyak_game SHARED ${SOURCE} ${INCLUDE_FILES})
+gather_all_files_under_subdirectory(ENGINE_CPP_FILES ENGINE_HPP_FILES "Files" "${PROJECT_ROOT}/src/engine")
 
-if (WIN32)
-    # TODO FIGURE OUT PROPERLY HOTLOADING IN WINDOWS
-    # Note that these are left here as a reminder for the next time.
-    #string(TIMESTAMP TODAY "%H:%M:%S%d%m%Y")
-    #string(CONCAT MANYAK_GAME_LIB_NAME "CMakeFiles\\manyak_game.dir\\manyak_game" ${TODAY})
-    #set(TARGET_PDB ${MANYAK_GAME_LIB_NAME})
-    #set(TARGET_COMPILE_PDB ${MANYAK_GAME_LIB_NAME})
-    #set_target_properties(manyak_game PROPERTIES
-    #    PDB_NAME ${MANYAK_GAME_LIB_NAME}
-    #    CMAKE_PDB_OUTPUT_DIRECTORY ${MANYAK_GAME_LIB_NAME}
-    #    CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY ${MANYAK_GAME_LIB_NAME})
-    #target_compile_options(manyak_game PRIVATE /Fd:${MANYAK_GAME_LIB_NAME} /PDB:manyak_%random%.pdb /PDBALTPATH:manyak_%random%.pdb)
-    #set_target_properties(manyak_game PROPERTIES
-    #    TARGET_COMPILE_PDB ${MANYAK_GAME_LIB_NAME}
-    #    CMAKE_C_COMPILE_OBJECT "<CMAKE_C_COMPILER>  /nologo <DEFINES> <INCLUDES> <FLAGS> /Fo<OBJECT> /FS -c <SOURCE>"
-    #    CMAKE_CXX_COMPILE_OBJECT "<CMAKE_CXX_COMPILER>  /nologo /TP <DEFINES> <INCLUDES> <FLAGS> /Fo<OBJECT> /FS -c <SOURCE>")
-    #
-    #get_target_property(targetCompileFlags manyak_game CMAKE_CXX_COMPILE_OBJECT)
-endif()
+add_library(manyak_engine STATIC ${ENGINE_CPP_FILES} ${ENGINE_HPP_FILES})
 
-# TODO manyak_project doesn't need to be linked against SDL libraries - SDL2
-target_link_libraries(manyak_game ${ALL_SDL2_LIBRARY_TARGETS} ${BOX2D_LIBRARY_TARGET})
+target_link_libraries(manyak_engine ${ALL_SDL2_LIBRARY_TARGETS} ${BOX2D_LIBRARY_TARGET})
 
-project(manyak_project)
+function(build_game game)
+    project(${game})
+    add_definitions(-DGAME_RESOURCE_DIR="${PROJECT_ROOT}/resources/${game}/")
 
-add_executable(manyak_project "src/main.cpp" "src/logger.cpp" "src/logger.hpp") 
+    gather_all_files_under_subdirectory(GAME_CPP_FILES GAME_HPP_FILES "Files" "${PROJECT_ROOT}/src/games/${game}")
 
-target_link_libraries(manyak_project manyak_game ${ALL_SDL2_LIBRARY_TARGETS} ${BOX2D_LIBRARY_TARGET})
+    add_executable(${game} ${GAME_CPP_FILES} ${GAME_HPP_FILES}) 
+
+    target_link_libraries(${game} manyak_engine)
+endfunction()
+
+get_all_directories(games_list "${PROJECT_ROOT}/src/games")
+foreach(game ${games_list})
+    build_game(${game})
+endforeach()
 
 #if(WIN32)
     # copy the .dll files to the same folder as the executable
@@ -129,52 +141,3 @@ target_link_libraries(manyak_project manyak_game ${ALL_SDL2_LIBRARY_TARGETS} ${B
             #$<TARGET_FILE_DIR:manyak_game>)
     #endforeach(DLL)
 #endif()
-
-#########################################################################################################################
-# This part is very helpful while debugging CMAKE. It has a lot of predefined variables and this part prints everything.
-# It helps with finding where certaing flags are coming from.
-
-
-#get_cmake_property(_variableNames VARIABLES)
-#list (SORT _variableNames)
-#foreach (_variableName ${_variableNames})
-#    message(STATUS "${_variableName}=${${_variableName}}")
-#endforeach()
-
-
-#########################################################################################################################
-# Similarly this does the same thing but for a specific target.
-
-# Get all propreties that cmake supports
-#execute_process(COMMAND cmake --help-property-list OUTPUT_VARIABLE CMAKE_PROPERTY_LIST)
-#
-## Convert command output into a CMake list
-#STRING(REGEX REPLACE ";" "\\\\;" CMAKE_PROPERTY_LIST "${CMAKE_PROPERTY_LIST}")
-#STRING(REGEX REPLACE "\n" ";" CMAKE_PROPERTY_LIST "${CMAKE_PROPERTY_LIST}")
-#
-#function(print_properties)
-#    message ("CMAKE_PROPERTY_LIST = ${CMAKE_PROPERTY_LIST}")
-#endfunction(print_properties)
-#
-#function(print_target_properties tgt)
-#    if(NOT TARGET ${tgt})
-#      message("There is no target named '${tgt}'")
-#      return()
-#    endif()
-#
-#    foreach (prop ${CMAKE_PROPERTY_LIST})
-#        string(REPLACE "<CONFIG>" "${CMAKE_BUILD_TYPE}" prop ${prop})
-#    # Fix https://stackoverflow.com/questions/32197663/how-can-i-remove-the-the-location-property-may-not-be-read-from-target-error-i
-#    if(prop STREQUAL "LOCATION" OR prop MATCHES "^LOCATION_" OR prop MATCHES "_LOCATION$")
-#        continue()
-#    endif()
-#        # message ("Checking ${prop}")
-#        get_property(propval TARGET ${tgt} PROPERTY ${prop} SET)
-#        if (propval)
-#            get_target_property(propval ${tgt} ${prop})
-#            message ("${tgt} ${prop} = ${propval}")
-#        endif()
-#    endforeach(prop)
-#endfunction(print_target_properties)
-#
-#print_target_properties(manyak_game)

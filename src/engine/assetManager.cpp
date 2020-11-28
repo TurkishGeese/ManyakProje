@@ -5,7 +5,7 @@
 
 AssetManager* AssetManager::sInstance = nullptr;
 
-std::string AssetManager::RESOURCE_DIR = "../resources/";
+std::string AssetManager::RESOURCE_DIR = "";
 
 void AssetManager::initialize() {
 	sInstance = new AssetManager();

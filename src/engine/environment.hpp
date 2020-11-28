@@ -4,7 +4,6 @@
 
 #include "manyakSDL.hpp"
 #include "manyakSDLttf.hpp"
-#include "gameState.hpp"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -25,6 +24,4 @@ private:
     SDL_Window *mWindow = nullptr;
     SDL_Renderer *mRenderer = nullptr;
     SDL_Surface *mScreenSurface = nullptr;
-
-    GameState mGameState;
 };

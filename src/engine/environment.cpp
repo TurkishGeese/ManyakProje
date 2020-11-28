@@ -68,12 +68,6 @@ void Environment::initialize() {
         return;
     }
 
-    // TODO: Investigate why TTF always needs to be reinitialized as a library and fails to load font otherwise.
-    // Currently, we only try to load a texture at the beginning. Will we have the same problem with SDL_image
-    // if we tried to load more stuff later? This is not exactly true since we can dynamically change the picture.
-    // Weird. If TTF state is somehow disappearing, all sorts of other stuff can happen with other SDL libraries.
-    if (mGameState.initialized) return;
-
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
         Logger::logSdlError("SDL Could not be initialized!");
         return;
@@ -100,15 +94,12 @@ void Environment::initialize() {
     }
 
     mScreenSurface = SDL_GetWindowSurface(mWindow);
-
-    mGameState.initialized = true;
 }
 
 bool Environment::start() {
     Renderer::initialize(mRenderer);
     InputManager::initialize();
     AssetManager::initialize();
-    if (!mGameState.initialized) return false;
 
     Master* master = Master::getInstance();
     // TODO create an active game system that allows the "game" to register what it wants
@@ -157,16 +148,6 @@ bool Environment::start() {
         master->update(delta);
 
         SDL_RenderPresent(mRenderer);
-
-        struct stat dllResult;
-        if (stat(MANYAK_GAME, &dllResult) == 0) {
-            if (lastModified == 0) {
-                lastModified = dllResult.st_mtime;
-            } else if (dllResult.st_mtime != lastModified) {
-                delete level;
-                return true;
-            }
-        }
     }
 
     delete master;

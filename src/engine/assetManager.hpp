@@ -9,13 +9,14 @@
 class AssetManager {
 
 public:
+	static std::string RESOURCE_DIR;
+
 	static void initialize();
 	static Asset* getAsset(std::string name);
 	static void reset(); // TODO need to be managing assets currently we don't free them (I think)
 
 private:
 	static AssetManager* sInstance;
-	static std::string RESOURCE_DIR;
 
 	std::map<std::string, Texture*> mTextures;
 	std::map<std::string, Asset*> mAssets;
