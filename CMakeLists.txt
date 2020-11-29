@@ -116,13 +116,35 @@ add_library(manyak_engine STATIC ${ENGINE_CPP_FILES} ${ENGINE_HPP_FILES})
 
 target_link_libraries(manyak_engine ${ALL_SDL2_LIBRARY_TARGETS} ${BOX2D_LIBRARY_TARGET})
 
+function(add_resource_dir_to_project resource_files resource_dir source_group_prefix)
+    file(GLOB all_files "${resource_dir}/*")
+
+    set(files_to_add "")
+    set(temp_resource_files "")
+    foreach(file ${all_files})
+        get_filename_component(filename ${file} NAME)
+        if(IS_DIRECTORY ${file})
+            add_resource_dir_to_project(temp_sub_resource_files "${resource_dir}/${filename}" "${source_group_prefix}/${filename}")
+            list(APPEND temp_resource_files ${temp_sub_resource_files})
+        else()
+            list(APPEND files_to_add ${file})
+            list(APPEND temp_resource_files ${file})
+        endif()
+    endforeach()
+    
+    set(${resource_files} ${temp_resource_files} PARENT_SCOPE)
+    source_group(${source_group_prefix} FILES ${files_to_add})
+endfunction()
+
 function(build_game game)
     project(${game})
-    add_definitions(-DGAME_RESOURCE_DIR="${PROJECT_ROOT}/resources/${game}/")
+    set(resource_dir "${PROJECT_ROOT}/resources/${game}")
+    add_definitions(-DGAME_RESOURCE_DIR="${resource_dir}/")
 
     gather_all_files_under_subdirectory(GAME_CPP_FILES GAME_HPP_FILES "Files" "${PROJECT_ROOT}/src/games/${game}")
+    add_resource_dir_to_project(RESOURCE_FILES "${PROJECT_ROOT}/resources/${game}" "Resources")
 
-    add_executable(${game} ${GAME_CPP_FILES} ${GAME_HPP_FILES}) 
+    add_executable(${game} ${GAME_CPP_FILES} ${GAME_HPP_FILES} ${RESOURCE_FILES}) 
 
     target_link_libraries(${game} manyak_engine)
 endfunction()
