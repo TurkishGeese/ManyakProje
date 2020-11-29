@@ -1,25 +1,17 @@
 #include "asset.hpp"
 
-Asset::Asset(std::vector<Texture*> textures, std::vector<std::string> names) {
-	int textureCount = textures.size();
-	mTextures = std::map<std::string, Texture*>();
-	for (int i = 0; i < textureCount; ++i) {
-		mTextures[names[i]] = textures[i];
-	}
-}
-
-Asset::Asset(Texture* texture) {
-	mTextures = std::map<std::string, Texture*>();
-	mTextures["default"] = texture;
-}
+Asset::Asset(std::unordered_map<std::string, AssetState> states)
+	: mStates(states)
+{}
 
 Asset::~Asset() {
 }
 
-void Asset::render(std::string activeTexture, Vec2 position, Vec2 renderSize) {
-	mTextures[activeTexture]->render(position, renderSize);
+bool Asset::render(std::string stateName, Vec2 position, Vec2 renderSize, int clip) {
+	return mStates.find(stateName)->second.render(position, renderSize, clip);
 }
 
-bool Asset::render(std::string activeTexture, Vec2 position, Vec2 renderSize, int clip) {
-	return mTextures[activeTexture]->render(position, renderSize, clip);
+int Asset::getClipCount(std::string stateName)
+{
+	return mStates.find(stateName)->second.getClipCount();
 }

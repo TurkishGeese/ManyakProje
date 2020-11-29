@@ -13,12 +13,8 @@ void RenderSystem::update(float delta)
 		TextureComponent* textureComponent = master->getComponentOfType<TextureComponent>(entity);
 		TransformComponent* transformComponent = master->getComponentOfType<TransformComponent>(entity);
 
-		if (textureComponent->mClip == -1)
-			textureComponent->mAsset->render(textureComponent->mActive, transformComponent->m_transform, textureComponent->mRenderSize);
-		else {
-			bool reset = textureComponent->mAsset->render(textureComponent->mActive, transformComponent->m_transform, textureComponent->mRenderSize, (int)textureComponent->mClip);
-			textureComponent->reset = reset;
-		}
+		bool reset = textureComponent->mAsset->render(textureComponent->mActive, transformComponent->m_transform, textureComponent->mRenderSize, (int)textureComponent->mClip);
+		textureComponent->reset = reset;
 	}
 }
 

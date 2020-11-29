@@ -2,20 +2,20 @@
 
 #include "texture.hpp"
 #include "vec2.hpp"
+#include "assetState.hpp"
 
 #include <vector>
 #include <string>
-#include <map>
+#include <unordered_map>
 
 class Asset {
 public:
-	Asset(std::vector<Texture*> textures, std::vector<std::string> names);
-	Asset(Texture* texture);
+	Asset(std::unordered_map<std::string, AssetState> states);
 	~Asset();
 
-	void render(std::string name, Vec2 position, Vec2 renderSize);
-	bool render(std::string name, Vec2 position, Vec2 renderSize, int clip);
+	bool render(std::string stateName, Vec2 position, Vec2 renderSize, int clip);
+	int getClipCount(std::string stateName);
 
-private:
-	std::map<std::string, Texture*> mTextures;
+protected:
+	std::unordered_map<std::string, AssetState> mStates;
 };

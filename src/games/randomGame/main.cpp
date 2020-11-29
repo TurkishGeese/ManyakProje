@@ -16,6 +16,7 @@
 #include "inputSystem.hpp"
 #include "uiInputSystem.hpp"
 #include "physicsSystem2D.hpp"
+#include "environment.hpp"
 
 #if defined(MANYAK_WIN32)
 #include <Windows.h>

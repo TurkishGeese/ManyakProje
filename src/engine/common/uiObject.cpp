@@ -34,12 +34,6 @@ bool isPointInsideBox(Vec2 boxPosition, Vec2 boxSize, Vec2 position)
 
 Entity UI::createText(std::string text, Vec2 position, SDL_Color color)
 {
-    SDL_Surface* textSurface = TTF_RenderText_Solid(Environment::sFont, text.c_str(), color);
-    if (textSurface == nullptr) {
-        Logger::logSdlTtfError("Could not create font surface.");
-        return INVALID_ENTITY;
-    }
-
     Master* master = Master::getInstance();
     Entity entity = master->createEntity();
     TextureComponent* textureComponent = master->addComponentOfType<TextureComponent>(entity);
@@ -47,11 +41,11 @@ Entity UI::createText(std::string text, Vec2 position, SDL_Color color)
     master->finalizeEntity(entity);
 
     transformComponent->m_transform = position;
-    textureComponent->mRenderSize = { (float)textSurface->w, (float)textSurface->h };
-    textureComponent->mAsset = new Asset(new Texture(textSurface));
-    textureComponent->mClip = -1;
+    TextAsset* asset = AssetManager::createText(text, color);
+    textureComponent->mRenderSize = asset->getTextSize();
+    textureComponent->mAsset = asset;
+    textureComponent->mClip = 0;
     textureComponent->mActive = "default";
-    SDL_FreeSurface(textSurface);
     return entity;
 }
 
@@ -67,7 +61,7 @@ Entity UI::createButton(void (*onClick)(), std::string text, Vec2 position, Vec2
     transformComponent->m_transform = position;
     textureComponent->mRenderSize = size;
     textureComponent->mAsset = AssetManager::getAsset("button");
-    textureComponent->mClip = -1;
+    textureComponent->mClip = 0;
     textureComponent->mActive = "default";
     Entity textEntity = createText(text, { 0, 0 }, { 0, 0, 0 });
 

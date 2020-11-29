@@ -12,8 +12,8 @@ public:
 	Texture(SDL_Surface *textSurface);
 	~Texture();
 
-	void render(Vec2 position, Vec2 renderSize);
 	bool render(Vec2 position, Vec2 renderSize, int clip);
+	Vec2 getTextureSize();
 
 private:
 	int mClips;
@@ -21,5 +21,4 @@ private:
 	Vec2 mClipUnit;
 	Vec2 mTextureSize;
 	SDL_Texture* mTexture;
-	bool isClipped = false;
 };
