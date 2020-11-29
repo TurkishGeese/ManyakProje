@@ -1,6 +1,5 @@
 #include <filesystem>
 
-#include "gameMain.hpp"
 #include "manyakSDL.hpp"
 
 #include "logger.hpp"
@@ -45,6 +44,7 @@ int main(int argc, const char* argv[]) {
     // TODO make this resource setting part better
     AssetManager::RESOURCE_DIR = GAME_RESOURCE_DIR;
     Renderer::RESOURCE_DIR = GAME_RESOURCE_DIR;
-    Environment* environment = getEnvironment();
-    startGame(environment);
+    Environment environment{};
+    environment.initialize();
+    environment.start();
 }
